@@ -1,137 +1,135 @@
 import pygame
-import random
 
-from unit import *
+# Initialize pygame
+pygame.init()
 
+# Screen dimensions
+screan_width = 1200
+screan_height = 700
+win = pygame.display.set_mode((screan_width, screan_height))
+pygame.display.set_caption("My Game")
+tile_size = 32
 
-class Game:
-    """
-    Classe pour représenter le jeu.
+# Player settings
+x = 50
+y = 50
+width = 50
+height = 60
+vel = 3
 
-    ...
-    Attributs
-    ---------
-    screen: pygame.Surface
-        La surface de la fenêtre du jeu.
-    player_units : list[Unit]
-        La liste des unités du joueur.
-    enemy_units : list[Unit]
-        La liste des unités de l'adversaire.
-    """
-
-    def __init__(self, screen):
-        """
-        Construit le jeu avec la surface de la fenêtre.
-
-        Paramètres
-        ----------
-        screen : pygame.Surface
-            La surface de la fenêtre du jeu.
-        """
-        self.screen = screen
-        self.player_units = [Unit(0, 0, 10, 2, 'player'),
-                             Unit(1, 0, 10, 2, 'player')]
-
-        self.enemy_units = [Unit(6, 6, 8, 1, 'enemy'),
-                            Unit(7, 6, 8, 1, 'enemy')]
-
-    def handle_player_turn(self):
-        """Tour du joueur"""
-        for selected_unit in self.player_units:
-
-            # Tant que l'unité n'a pas terminé son tour
-            has_acted = False
-            selected_unit.is_selected = True
-            self.flip_display()
-            while not has_acted:
-
-                # Important: cette boucle permet de gérer les événements Pygame
-                for event in pygame.event.get():
-
-                    # Gestion de la fermeture de la fenêtre
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        exit()
-
-                    # Gestion des touches du clavier
-                    if event.type == pygame.KEYDOWN:
-
-                        # Déplacement (touches fléchées)
-                        dx, dy = 0, 0
-                        if event.key == pygame.K_LEFT:
-                            dx = -1
-                        elif event.key == pygame.K_RIGHT:
-                            dx = 1
-                        elif event.key == pygame.K_UP:
-                            dy = -1
-                        elif event.key == pygame.K_DOWN:
-                            dy = 1
-
-                        selected_unit.move(dx, dy)
-                        self.flip_display()
-
-                        # Attaque (touche espace) met fin au tour
-                        if event.key == pygame.K_SPACE:
-                            for enemy in self.enemy_units:
-                                if abs(selected_unit.x - enemy.x) <= 1 and abs(selected_unit.y - enemy.y) <= 1:
-                                    selected_unit.attack(enemy)
-                                    if enemy.health <= 0:
-                                        self.enemy_units.remove(enemy)
-
-                            has_acted = True
-                            selected_unit.is_selected = False
-
-    def handle_enemy_turn(self):
-        """IA très simple pour les ennemis."""
-        for enemy in self.enemy_units:
-
-            # Déplacement aléatoire
-            target = random.choice(self.player_units)
-            dx = 1 if enemy.x < target.x else -1 if enemy.x > target.x else 0
-            dy = 1 if enemy.y < target.y else -1 if enemy.y > target.y else 0
-            enemy.move(dx, dy)
-
-            # Attaque si possible
-            if abs(enemy.x - target.x) <= 1 and abs(enemy.y - target.y) <= 1:
-                enemy.attack(target)
-                if target.health <= 0:
-                    self.player_units.remove(target)
-
-    def flip_display(self):
-        """Affiche le jeu."""
-
-        # Affiche la grille
-        self.screen.fill(BLACK)
-        for x in range(0, WIDTH, CELL_SIZE):
-            for y in range(0, HEIGHT, CELL_SIZE):
-                rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
-                pygame.draw.rect(self.screen, WHITE, rect, 1)
-
-        # Affiche les unités
-        for unit in self.player_units + self.enemy_units:
-            unit.draw(self.screen)
-
-        # Rafraîchit l'écran
-        pygame.display.flip()
+# Load animations
+wlak_right = [pygame.image.load(f"frame_{i}.png") for i in range(7)]
+wlak_left = [pygame.image.load(f"frame_{i + 8}.png") for i in range(7)]
 
 
-def main():
+# Wall class
+class Wall:
+    def __init__(self, wall_txt_file, dim, win, width, height):
+        self.dim = dim
+        self.win = win
+        self.width = width
+        self.height = height
+        self.wall_txt_file = wall_txt_file
+        self.wall_positions = self.getting_XandY_of_wall()
 
-    # Initialisation de Pygame
-    pygame.init()
+    def getting_XandY_of_wall(self):
+        """Read wall positions from a file and return as a list of Rect objects."""
+        world_data = []
+        wall_rects = []
+        with open(self.wall_txt_file, 'r') as world:
+            for line in world:
+                world_data.append(line.strip())
 
-    # Instanciation de la fenêtre
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Mon jeu de stratégie")
+        for row, tiles in enumerate(world_data):
+            for col, tile in enumerate(tiles):
+                if tile == '1':
+                    wall_rects.append(
+                        pygame.Rect(col * self.dim, row * self.dim, self.width, self.height)
+                    )
+        return wall_rects
 
-    # Instanciation du jeu
-    game = Game(screen)
-
-    # Boucle principale du jeu
-    while True:
-        game.handle_player_turn()
-        game.handle_enemy_turn()
+    def wall_drawing(self):
+        """Draw all walls on the screen."""
+        for rect in self.wall_positions:
+            pygame.draw.rect(self.win, (255, 0, 0), rect)
 
 
-if __name__ == "__main__":
-    main()
+# Player class
+class Player:
+    def __init__(self, pos_x, pos_y, wlak_right, wlak_left, vel=10):
+        self.x = pos_x
+        self.y = pos_y
+        self.wlak_right = wlak_right
+        self.wlak_left = wlak_left
+        self.vel = vel
+        self.left = False
+        self.right = False
+        self.walkcount_left = 0
+        self.walkcount_right = 0
+        self.rect = pygame.Rect(self.x, self.y, 32, 32)
+
+    def move(self, wall_rects):
+        """Handle player movement and collision detection."""
+        keys = pygame.key.get_pressed()
+        new_x, new_y = self.x, self.y
+
+        if keys[pygame.K_LEFT]:
+            new_x -= self.vel
+            self.left = True
+            self.right = False
+            self.walkcount_left += 1
+            if self.walkcount_left >= len(self.wlak_left):
+                self.walkcount_left = 0
+        if keys[pygame.K_RIGHT]:
+            new_x += self.vel
+            self.left = False
+            self.right = True
+            self.walkcount_right += 1
+            if self.walkcount_right >= len(self.wlak_right):
+                self.walkcount_right = 0
+        if keys[pygame.K_UP]:
+            new_y -= self.vel
+        if keys[pygame.K_DOWN]:
+            new_y += self.vel
+
+        # Predict the player's next position
+        new_rect = pygame.Rect(new_x, new_y, self.rect.width, self.rect.height)
+
+        # Check for collisions
+        if not any(new_rect.colliderect(wall) for wall in wall_rects):
+            self.x, self.y = new_x, new_y
+            self.rect.topleft = (self.x, self.y)
+
+    def draw(self):
+        """Draw the player on the screen."""
+        if self.right:
+            win.blit(self.wlak_right[self.walkcount_right], (self.x, self.y))
+        elif self.left:
+            win.blit(self.wlak_left[self.walkcount_left], (self.x, self.y))
+        else:
+            win.blit(self.wlak_right[0], (self.x, self.y))
+
+
+# Initialize wall and player objects
+wal1 = Wall("wall.txt", tile_size, win, tile_size, tile_size)
+player1 = Player(x, y, wlak_right, wlak_left)
+
+# Game loop
+run = True
+while run:
+    pygame.time.delay(20)  # The clock in our game
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+
+    # Update and draw everything
+    player1.move(wal1.wall_positions)
+
+    win.fill((255, 255, 255))
+    wal1.wall_drawing()
+    player1.draw()
+
+    pygame.display.update()  # Show the drawn frame
+
+pygame.quit()

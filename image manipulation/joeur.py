@@ -8,7 +8,7 @@ pygame.init()
 pygame.display.set_mode((1, 1))
 
 # Load the sprite sheet
-sprite_sheet = pygame.image.load(r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\assets\image1.png").convert_alpha()
+sprite_sheet = pygame.image.load(r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\grass.jpg").convert_alpha()
 
 # Frame properties
 frame_width = 64/2  # Width of each frame
@@ -17,7 +17,7 @@ num_columns = 8  # Number of frames in a row
 num_rows = 2  # Number of rows in the sprite sheet
 
 # Output folder for frames
-output_folder = r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\output_frames"
+output_folder = r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\grass_frames"
 os.makedirs(output_folder, exist_ok=True)  # Create the folder if it doesn't exist
 
 # Extract and save frames
