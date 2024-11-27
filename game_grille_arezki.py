@@ -91,14 +91,16 @@ class Cursor:
         pygame.draw.rect(self.win, (255, 0, 0), new_rect)
 
 
-# Player class
-class Player:
+# Player Unit
+class unit:
     def __init__(self, pos_x, pos_y, image_player, win):
         self.x = pos_x
         self.y = pos_y
         self.image_player = image_player
         self.win = win
         self.is_selected = False
+        
+        self.activate = False
 
     def toggle_selection(self, cursor):
         """Toggle player selection based on cursor position."""
@@ -118,14 +120,40 @@ class Player:
         """Draw the player on the screen."""
         win.blit(self.image_player, (self.x, self.y))
         if self.is_selected:
-            pygame.draw.rect(self.win, (0, 255, 0), (self.x, self.y, tile_size, tile_size), 3)
+            pygame.draw.rect(self.win, (0, 255, 0), (self.x, self.y, tile_size, tile_size), 1)
+
+    def zone(self) :
+        zone_data=[]
+        
+        for x in range( self.x-2*tile_size , self.x+2*tile_size , tile_size  ) :
+            for y in range( self.y-2*tile_size , self.y+3*tile_size,tile_size ) :
+                
+                rect = pygame.Rect( x,y,30, 30)
+                zone_data.append(rect)
+        return zone_data
+       
+    
+    def draw_zone(self):
+        if self.activate :
+            for rect in self.zone() :
+             
+                pygame.draw.rect(self.win, (0, 255, 0),rect )
+            
+            
+
+
+
+
+
+
+
 
 
 # Initialize wall and player objects
 wal1 = Wall(grass_image, "map.txt", tile_size, win, tile_size, tile_size)
 curs = Cursor(0, 0, win)
-player1 = Player(x, y, image_player, win)
-player2 = Player(x*4, y, image_player, win)
+unit1 = unit(x, y, image_player, win)
+unit2 = unit(x*4, y, image_player, win)
 
 # Game loop
 run = True
@@ -136,17 +164,23 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            if player1.is_selected:
-                player1.move_to_cursor(curs)
+            if unit1.is_selected:
+                unit1.move_to_cursor(curs)
             else:
-                player1.toggle_selection(curs)
+                unit1.toggle_selection(curs)
+    
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_k and unit1.is_selected:
+            unit1.activate = not unit1.activate  
+        
+
     curs.move()
 
     win.fill((255, 255, 255))
     wal1.wall_drawing()
     curs.draw()
-    player1.draw()
-    player2.draw()
+    unit1.draw()
+    unit1.draw_zone()
+    
 
     pygame.display.update()
 
