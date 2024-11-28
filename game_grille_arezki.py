@@ -74,17 +74,7 @@ while run:
         Unit.draw(health_picture)
         if Unit.remove :
             units.remove(Unit)
-            
-
-    
-    
-
-        
-    
-    
-        
-    
-    
+       
 
     pygame.display.update()
 
