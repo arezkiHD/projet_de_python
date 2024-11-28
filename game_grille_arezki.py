@@ -56,28 +56,33 @@ unit1 = unit(x, y, image_player, win,wal1,matrice)
 unit2 = unit(x*5, y*5, image_player, win,wal1,matrice)
 texte1 = afiche_texte("hello",1000,30,(255,255,255),win)
 
+units = [unit1 ,unit2]
 
 # Game loop
 run = True
 while run:
     pygame.time.delay(60)
-    EVENT = Event_manipulation(pygame.event.get(),run,[unit1, unit2],[pygame.K_a , pygame.K_z ], pygame.K_SPACE  )
+    EVENT = Event_manipulation(pygame.event.get(),run,units,[pygame.K_a , pygame.K_z ], pygame.K_SPACE  )
     EVENT.events_handler()
     run=EVENT.run
-        
-    unit1.move() 
-    unit2.move()   
-
-
     win.fill((0,0,0))
     wal1.wall_drawing()
-    unit1.draw_zone()
-    unit1.draw(health_picture)
 
-    unit2.draw_zone()
- 
-   
-    unit2.draw(health_picture)
+    for Unit in  units :    
+        Unit.move()         
+        Unit.draw_zone()
+        Unit.draw(health_picture)
+        if Unit.remove :
+            units.remove(Unit)
+            
+
+    
+    
+
+        
+    
+    
+        
     
     
 

@@ -14,7 +14,7 @@ wlak_right=[pygame.image.load(os.path.join("pictures\humain_male",f"right ({i}).
 walk_left=[pygame.image.load(os.path.join("pictures\humain_male",f"left ({i}).png")) for i in range(1,6) ]
 walk_up=[pygame.image.load(os.path.join("pictures\humain_male",f"up ({i}).png")) for i in range(1,6) ]
 walk_down=[pygame.image.load(os.path.join("pictures\humain_male",f"down ({i}).png")) for i in range(1,5) ]
-health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health{i}.png")) for i in range(1,5) ]
+health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health{i}.png")) for i in range(1,6) ]
 
 
 matrice = [0,0,0,1,0,0,0,  0,0,1,1,1,0,0  ,0,1,1,1,1,1,0,  1,1,1,1,1,1,1,  0,1,1,1,1,1,0,    0,0,1,1,1,0,0 ,  0,0,0,1,0,0,0  ]  # matrice ppir la zone 
@@ -48,6 +48,7 @@ class unit:
         self.down = False
         self.is_selected = False
         self.activate = False
+        self.remove = False
 
         self.walkcount_left = 0
         self.walkcount_right = 0
@@ -60,16 +61,19 @@ class unit:
     def calculate_zone(self, origin_x, origin_y):
         """Calculate the movable zone based on a fixed origin."""
         zone_data = []
-        i = 0
-        for x in range(origin_x - 3 * tile_size, origin_x + 4 * tile_size, tile_size):
-            for y in range(origin_y - 3 * tile_size, origin_y + 4 * tile_size, tile_size):
-                if self.matrice[i] == 1:
-                    rect = pygame.Rect(x, y, tile_size, tile_size)
-                    if not any(rect.colliderect(wall) for wall in self.wall_rect.wall_positions["wall"] ) :                        
-                        zone_data.append(rect)
+        if not self.remove :
+            i = 0
+            for x in range(origin_x - 3 * tile_size, origin_x + 4 * tile_size, tile_size):
+                for y in range(origin_y - 3 * tile_size, origin_y + 4 * tile_size, tile_size):
+                    if self.matrice[i] == 1:
+                        rect = pygame.Rect(x, y, tile_size, tile_size)
+                        if not any(rect.colliderect(wall) for wall in self.wall_rect.wall_positions["wall"] ) :                        
+                            zone_data.append(rect)
 
-                i += 1
+                    i += 1
+        else :
 
+            zone_data= []
             
         return zone_data
     
@@ -82,7 +86,9 @@ class unit:
                 self.wall_rect.wall_positions["grass"].append(pygame.Rect(self.x,self.y,tile_size,tile_size))
 
 
-        
+    def to_remove(self) :
+        if self.health <= 0 :
+            self.remove = True   
 
 
     def toggle_zone(self):
@@ -94,12 +100,13 @@ class unit:
 
     def draw_zone(self ):
 
-        if self.activate and self.is_selected:
+        if self.activate and self.is_selected and not self.remove:
             for rect in self.active_zone:
                 pygame.draw.rect(self.win, (0, 255, 0), rect, 2)
 
     def move(self):
-        self.passes_through_trap()
+        self.to_remove()
+        if not self.remove : self.passes_through_trap()
         """Handle player movement and collision detection."""
         if self.is_selected and self.active_zone:
             keys = pygame.key.get_pressed()
@@ -151,27 +158,28 @@ class unit:
 
     def draw(self,health_picture):
         """Draw the player on the screen."""
-        if self.right:
-            self.win.blit(self.wlak_right[self.walkcount_right], (self.x, self.y))
-        elif self.left:
-            self.win.blit(self.wlak_left[self.walkcount_left], (self.x, self.y))
-        elif self.up:
-            self.win.blit(self.wlak_up[self.walkcount_up], (self.x, self.y))
-        elif self.down:
-            self.win.blit(self.wlak_down[self.walkcount_down], (self.x, self.y))
-           
-        else:
-            self.win.blit(self.image_player, (self.x, self.y))
-        if self.is_selected:
-            
-            pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)
-            if self.health== 100 :
-                self.win.blit(health_picture[0], (self.x, self.y-10))
-            elif self.health== 80 :            
-                self.win.blit(health_picture[1], (self.x, self.y-10))
-            elif self.health== 60 :
-                self.win.blit(health_picture[2], (self.x, self.y-10))
-            elif self.health== 40:
-                self.win.blit(health_picture[3], (self.x, self.y-10))
-            elif self.health== 20 :
-                self.win.blit(health_picture[4], (self.x, self.y-10))
+        if self.health >0 :
+            if self.right:
+                self.win.blit(self.wlak_right[self.walkcount_right], (self.x, self.y))
+            elif self.left:
+                self.win.blit(self.wlak_left[self.walkcount_left], (self.x, self.y))
+            elif self.up:
+                self.win.blit(self.wlak_up[self.walkcount_up], (self.x, self.y))
+            elif self.down:
+                self.win.blit(self.wlak_down[self.walkcount_down], (self.x, self.y))
+
+            else:
+                self.win.blit(self.image_player, (self.x, self.y))
+            if self.is_selected  :
+
+                pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)
+                if self.health== 100 :
+                    self.win.blit(health_picture[0], (self.x, self.y-10))
+                elif self.health== 80 :            
+                    self.win.blit(health_picture[1], (self.x, self.y-10))
+                elif self.health== 60 :
+                    self.win.blit(health_picture[2], (self.x, self.y-10))
+                elif self.health== 40:
+                    self.win.blit(health_picture[3], (self.x, self.y-10))
+                elif self.health == 20 :
+                    self.win.blit(health_picture[4], (self.x, self.y-10))
