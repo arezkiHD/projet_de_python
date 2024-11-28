@@ -13,8 +13,8 @@ tile_size = 30  # Tile size for grid alignment
 wlak_right=[pygame.image.load(os.path.join("pictures\humain_male",f"right ({i}).png")) for i in range(1,6) ]
 walk_left=[pygame.image.load(os.path.join("pictures\humain_male",f"left ({i}).png")) for i in range(1,6) ]
 walk_up=[pygame.image.load(os.path.join("pictures\humain_male",f"up ({i}).png")) for i in range(1,6) ]
-walk_down=[pygame.image.load(os.path.join("pictures\humain_male",f"down ({i}).png")) for i in range(1,5) 
-health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health_bar{i}.png")) for i in range(1,5) ]
+walk_down=[pygame.image.load(os.path.join("pictures\humain_male",f"down ({i}).png")) for i in range(1,5) ]
+health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health{i}.png")) for i in range(1,5) ]
 
 
 matrice = [0,0,0,1,0,0,0,  0,0,1,1,1,0,0  ,0,1,1,1,1,1,0,  1,1,1,1,1,1,1,  0,1,1,1,1,1,0,    0,0,1,1,1,0,0 ,  0,0,0,1,0,0,0  ]  # matrice ppir la zone 
@@ -22,7 +22,7 @@ matrice = [0,0,0,1,0,0,0,  0,0,1,1,1,0,0  ,0,1,1,1,1,1,0,  1,1,1,1,1,1,1,  0,1,1
 
 
 class unit:
-    def __init__(self, pos_x, pos_y, image_player, win, wall_rect,matrice_zone= matrice , wlak_right=wlak_right, wlak_left=wlak_left, wlak_up = wlak_up , walk_down = walk_down):
+    def __init__(self, pos_x, pos_y, image_player, win, wall_rect,matrice_zone= matrice , wlak_right=wlak_right, wlak_left=walk_left, wlak_up = walk_up , walk_down = walk_down):
         self.x = pos_x
         self.y = pos_y
         self.wall_rect = wall_rect  
@@ -65,13 +65,25 @@ class unit:
             for y in range(origin_y - 3 * tile_size, origin_y + 4 * tile_size, tile_size):
                 if self.matrice[i] == 1:
                     rect = pygame.Rect(x, y, tile_size, tile_size)
-                    if not any(rect.colliderect(wall) for wall in self.wall_rect ) :                        
+                    if not any(rect.colliderect(wall) for wall in self.wall_rect.wall_positions["wall"] ) :                        
                         zone_data.append(rect)
 
                 i += 1
 
             
         return zone_data
+    
+    def passes_through_trap(self) :
+        rect = pygame.Rect(self.x, self.y, tile_size, tile_size)
+        for water in self.wall_rect.wall_positions["water"] :
+            if  rect.colliderect(water)   :
+                self.health = self.health-20
+                self.wall_rect.wall_positions["water"].remove(water)
+                self.wall_rect.wall_positions["grass"].append(pygame.Rect(self.x,self.y,tile_size,tile_size))
+
+
+        
+
 
     def toggle_zone(self):
         """Toggle the activation and recalculate the active zone if needed."""
@@ -87,6 +99,7 @@ class unit:
                 pygame.draw.rect(self.win, (0, 255, 0), rect, 2)
 
     def move(self):
+        self.passes_through_trap()
         """Handle player movement and collision detection."""
         if self.is_selected and self.active_zone:
             keys = pygame.key.get_pressed()
@@ -134,6 +147,7 @@ class unit:
             # Allow movement only within the active zone
             if any(new_rect.colliderect(zone) for zone in self.active_zone) :
                 self.x, self.y = new_x, new_y
+            
 
     def draw(self,health_picture):
         """Draw the player on the screen."""
@@ -152,4 +166,12 @@ class unit:
             
             pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)
             if self.health== 100 :
-                self.win.blit(health_picture, (self.x, self.y-10))
+                self.win.blit(health_picture[0], (self.x, self.y-10))
+            elif self.health== 80 :            
+                self.win.blit(health_picture[1], (self.x, self.y-10))
+            elif self.health== 60 :
+                self.win.blit(health_picture[2], (self.x, self.y-10))
+            elif self.health== 40:
+                self.win.blit(health_picture[3], (self.x, self.y-10))
+            elif self.health== 20 :
+                self.win.blit(health_picture[4], (self.x, self.y-10))

@@ -14,6 +14,7 @@ screan_width = 720
 screan_height = 600
 win = pygame.display.set_mode((screan_width, screan_height))
 pygame.display.set_caption("My Game")
+map_file = r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\pictures\maps_picture\wall.txt"
 
 
 # Player settings
@@ -50,9 +51,9 @@ class Event_manipulation():
                 
                 
 # Initialize wall and player objects
-wal1 = Wall(grass_image, "map.txt", tile_size, win, tile_size, tile_size)
-unit1 = unit(x, y, image_player, win,wal1.wall_positions["wall"],matrice)
-unit2 = unit(x*5, y*5, image_player, win,wal1.wall_positions["wall"],matrice)
+wal1 = Wall(grass_image, map_file, tile_size, win, tile_size, tile_size)
+unit1 = unit(x, y, image_player, win,wal1,matrice)
+unit2 = unit(x*5, y*5, image_player, win,wal1,matrice)
 texte1 = afiche_texte("hello",1000,30,(255,255,255),win)
 
 
@@ -66,6 +67,7 @@ while run:
         
     unit1.move() 
     unit2.move()   
+
 
     win.fill((0,0,0))
     wal1.wall_drawing()

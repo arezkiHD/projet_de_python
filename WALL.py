@@ -1,9 +1,10 @@
 import pygame
+import os 
 
-image_player = pygame.image.load("up (2).png")
-grass_image = pygame.image.load("grass.png")
-water_image = pygame.image.load("water.png")
-wall_image = pygame.image.load("wall.png")
+image_player =  pygame.image.load(os.path.join("pictures\humain_male", 'up (2).png')) 
+grass_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'grass.png')) 
+water_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'water.png')) 
+wall_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'wall.png')) 
 
 tile_size = 30
 
