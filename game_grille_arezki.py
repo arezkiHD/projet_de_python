@@ -78,9 +78,9 @@ class Cursor:
         self.vel = vel
         self.win = win
 
-    def move(self,  wall):
+    def move(self,  wall ):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and self.x > 0:
+        if keys[pygame.K_LEFT] and self.x > 0 :
             self.x -= self.vel
         if keys[pygame.K_RIGHT] and self.x < wall:
             self.x += self.vel
@@ -95,7 +95,7 @@ class Cursor:
         pygame.draw.rect(self.win, (255, 0, 0), new_rect)
 
 
-# Player Unit
+# class Unit
 class unit:
     def __init__(self, pos_x, pos_y, image_player, win, matrice_zone):
         self.x = pos_x
@@ -128,22 +128,16 @@ class unit:
         if self.is_selected:
             pygame.draw.rect(self.win, (0, 255, 0), (self.x, self.y, tile_size, tile_size), 1)
 
-    def zone(self) :
+    def zone(self) :        
+        zone_data=[]         
+        i = 0   
         
-        zone_data=[]
-         
-        i = 0
-        
-        
-        for x in range( self.x-2*tile_size , self.x+3*tile_size , tile_size  ) :
-            for y in range( self.y-2*tile_size , self.y+3*tile_size,tile_size ) :
-                if x == self.x and y == self.y :
-                    continue
-                else :
-                    if self.matrice[i] == 1  :
-                        rect = pygame.Rect( x,y,30, 30)
-                        zone_data.append(rect) 
-            i = i+1               
+        for x in range( self.x-3*tile_size , self.x+4*tile_size , tile_size  ) :
+            for y in range( self.y-3*tile_size , self.y+4*tile_size,tile_size ) :
+                if self.matrice[i] == 1  :
+                    rect = pygame.Rect( x,y,30, 30)
+                    zone_data.append(rect) 
+                i = i+1               
         return zone_data 
        
     
@@ -166,7 +160,8 @@ class afiche_texte():   # it can be abstrect !!
         win.blit(text_surface, (self.xpos, self.ypos))  # Blit the text to the screen
 
 
-matrice = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]    # here just we need to make sure that the size is the same size of range x and y 
+matrice = [0,0,0,1,0,0,0,  0,0,1,1,1,0,0  ,0,1,1,1,1,1,0,  1,1,1,0,1,1,1,  0,1,1,1,1,1,0,    0,0,1,1,1,0,0 ,  0,0,0,1,0,0,0  ]    # here just we need to make sure that the size is the same size of range x and y 
+
 
 # Initialize wall and player objects
 wal1 = Wall(grass_image, "map.txt", tile_size, win, tile_size, tile_size)
@@ -188,13 +183,14 @@ while run:
                 unit1.move_to_cursor(curs)
             else:
                 unit1.toggle_selection(curs)
+        
     
         if event.type == pygame.KEYDOWN and event.key == pygame.K_k and unit1.is_selected:
             unit1.activate = not unit1.activate  
         
 
     curs.move(wal1.len_of_wall_matrice)
-    print("___________________________", wal1.len_of_wall_matrice)
+    
 
     win.fill((0,0,0))
     wal1.wall_drawing()
