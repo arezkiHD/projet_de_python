@@ -4,6 +4,7 @@ import numpy as np
 from UNIT_AREZKI import * 
 from WALL import *
 from AFFICHE_GAME_RESAULT import * 
+from map_loader import *
 
 
 # Initialize pygame
@@ -54,7 +55,7 @@ wal1 = Wall(grass_image, "map.txt", tile_size, win, tile_size, tile_size)
 unit1 = unit(x, y, image_player, win,wal1.wall_positions["wall"],matrice)
 unit2 = unit(x*5, y*5, image_player, win,wal1.wall_positions["wall"],matrice)
 texte1 = afiche_texte("hello",1000,30,(255,255,255),win)
-
+map = MapLoader("facile")
 
 # Game loop
 run = True

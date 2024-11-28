@@ -8,12 +8,12 @@ wall_image = pygame.image.load("wall.png")
 tile_size = 30
 
 class Wall:
-    def __init__(self, grass_image, wall_txt_file, dim, win, width, height, water_image=water_image, wall_image=wall_image):
+    def __init__(self, grass_image, map, dim, win, width, height, water_image=water_image, wall_image=wall_image):
         self.dim = dim
         self.win = win
         self.width = width
         self.height = height
-        self.wall_txt_file = wall_txt_file
+        self.map = map
         
 
         self.wall_positions = self.getting_XandY_of_wall()
@@ -29,14 +29,14 @@ class Wall:
             for line in world:
                 world_data.append(line.strip())
 
-        for row, tiles in enumerate(world_data):
-            for col, tile in enumerate(tiles):
+        for row in range(1 , len(self.map[0])) :
+            for col in range(1 , len(self.map[0]))  :
                 rect = pygame.Rect(col * self.dim, row * self.dim, self.dim, self.dim)
-                if tile == '1':  # Water tiles
+                if self.map(row,col) == '1' or  self.map(row,col)  == '3' :  # Water tiles
                     wall_dict["water"].append(rect)
-                elif tile == '0':  # Grass tiles
+                elif self.map(row,col)  == '0':  # Grass tiles
                     wall_dict["grass"].append(rect)
-                elif tile == '2':  # Wall tiles
+                elif self.map(row,col)  == '2':  # Wall tiles
                     wall_dict["wall"].append(rect)
         self.len_of_wall_matrice = col*tile_size
         return wall_dict

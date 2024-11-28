@@ -2,6 +2,7 @@ import pygame
 import os
 from WALL import *
 
+
 tile_size = 30  # Tile size for grid alignment
 
 # Load animations
