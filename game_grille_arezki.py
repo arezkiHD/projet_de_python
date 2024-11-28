@@ -51,8 +51,8 @@ class Event_manipulation():
                 
 # Initialize wall and player objects
 wal1 = Wall(grass_image, "map.txt", tile_size, win, tile_size, tile_size)
-unit1 = unit(x, y, image_player, win,matrice)
-unit2 = unit(x*5, y*5, image_player, win,matrice)
+unit1 = unit(x, y, image_player, win,wal1.wall_positions["wall"],matrice)
+unit2 = unit(x*5, y*5, image_player, win,wal1.wall_positions["wall"],matrice)
 texte1 = afiche_texte("hello",1000,30,(255,255,255),win)
 
 
@@ -63,25 +63,19 @@ while run:
     EVENT = Event_manipulation(pygame.event.get(),run,[unit1, unit2],[pygame.K_a , pygame.K_z ], pygame.K_SPACE  )
     EVENT.events_handler()
     run=EVENT.run
-    
-    
         
     unit1.move() 
-    unit2.move() 
-        
-
-    
-    
+    unit2.move()   
 
     win.fill((0,0,0))
     wal1.wall_drawing()
     unit1.draw_zone()
-    unit1.draw()
+    unit1.draw(health_picture)
 
     unit2.draw_zone()
  
    
-    unit2.draw()
+    unit2.draw(health_picture)
     
     
 
