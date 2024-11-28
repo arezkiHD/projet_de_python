@@ -8,13 +8,13 @@ pygame.init()
 pygame.display.set_mode((1, 1))
 
 # Load the sprite sheet
-sprite_sheet = pygame.image.load(r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\grass.jpg").convert_alpha()
+sprite_sheet = pygame.image.load(r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\image manipulation\\human_male_body_1.png").convert_alpha()
 
 # Frame properties
-frame_width = 64/2  # Width of each frame
-frame_height = 64/2  # Height of each frame
-num_columns = 8  # Number of frames in a row
-num_rows = 2  # Number of rows in the sprite sheet
+frame_width = 32  # Width of each frame
+frame_height =32   # Height of each frame
+num_columns = 6  # Number of frames in a row
+num_rows = 4  # Number of rows in the sprite sheet
 
 # Output folder for frames
 output_folder = r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\grass_frames"
