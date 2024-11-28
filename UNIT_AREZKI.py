@@ -13,7 +13,7 @@ tile_size = 30  # Tile size for grid alignment
 wlak_right=[pygame.image.load(os.path.join("pictures\humain_male",f"right ({i}).png")) for i in range(1,6) ]
 walk_left=[pygame.image.load(os.path.join("pictures\humain_male",f"left ({i}).png")) for i in range(1,6) ]
 walk_up=[pygame.image.load(os.path.join("pictures\humain_male",f"up ({i}).png")) for i in range(1,6) ]
-walk_down=[pygame.image.load(os.path.join("pictures\humain_male",f"down ({i}).png")) for i in range(1,5) 
+walk_down=[pygame.image.load(os.path.join("pictures\humain_male",f"down ({i}).png")) for i in range(1,5)  ]
 health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health_bar{i}.png")) for i in range(1,5) ]
 
 
