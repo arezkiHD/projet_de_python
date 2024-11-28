@@ -1,4 +1,5 @@
 import pygame
+import numpy as np 
 
 # Initialize pygame
 pygame.init()
@@ -13,8 +14,8 @@ tile_size = 30  # Tile size for grid alignment
 # Player settings
 x = 30
 y = 30
-width = 30
-height = 30
+
+font = pygame.font.SysFont("Arial", 50)
 
 image_player = pygame.image.load("frame_0.png")
 grass_image = pygame.image.load("grass.png")
@@ -30,11 +31,13 @@ class Wall:
         self.width = width
         self.height = height
         self.wall_txt_file = wall_txt_file
+        
+
         self.wall_positions = self.getting_XandY_of_wall()
         self.grass_image = grass_image
         self.water_image = water_image
         self.wall_image = wall_image
-
+        
     def getting_XandY_of_wall(self):
         """Read wall positions from a file and return as a dictionary with wall types."""
         world_data = []
@@ -52,6 +55,7 @@ class Wall:
                     wall_dict["grass"].append(rect)
                 elif tile == '2':  # Wall tiles
                     wall_dict["wall"].append(rect)
+        self.len_of_wall_matrice = col*tile_size
         return wall_dict
 
     def wall_drawing(self):
@@ -66,7 +70,7 @@ class Wall:
 
 # Cursor class
 class Cursor:
-    def __init__(self, pos_x, pos_y, win, height=tile_size, width=tile_size, vel=tile_size):
+    def __init__(self, pos_x, pos_y, win,  height=tile_size, width=tile_size, vel=tile_size):
         self.x = pos_x
         self.y = pos_y
         self.height = height
@@ -74,11 +78,11 @@ class Cursor:
         self.vel = vel
         self.win = win
 
-    def move(self):
+    def move(self,  wall):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] and self.x > 0:
             self.x -= self.vel
-        if keys[pygame.K_RIGHT] and self.x < screan_width - self.width:
+        if keys[pygame.K_RIGHT] and self.x < wall:
             self.x += self.vel
         if keys[pygame.K_UP] and self.y > 0:
             self.y -= self.vel
@@ -93,11 +97,12 @@ class Cursor:
 
 # Player Unit
 class unit:
-    def __init__(self, pos_x, pos_y, image_player, win):
+    def __init__(self, pos_x, pos_y, image_player, win, matrice_zone):
         self.x = pos_x
         self.y = pos_y
         self.image_player = image_player
         self.win = win
+        self.matrice = matrice_zone
         self.is_selected = False
         
         self.activate = False
@@ -108,6 +113,7 @@ class unit:
         cursor_rect = pygame.Rect(cursor.x, cursor.y, tile_size, tile_size)
         if player_rect.colliderect(cursor_rect):
             self.is_selected = not self.is_selected
+
 
     def move_to_cursor(self, cursor):
         """Move player to the cursor's position if selected."""
@@ -123,37 +129,51 @@ class unit:
             pygame.draw.rect(self.win, (0, 255, 0), (self.x, self.y, tile_size, tile_size), 1)
 
     def zone(self) :
-        zone_data=[]
         
-        for x in range( self.x-2*tile_size , self.x+2*tile_size , tile_size  ) :
+        zone_data=[]
+         
+        i = 0
+        
+        
+        for x in range( self.x-2*tile_size , self.x+3*tile_size , tile_size  ) :
             for y in range( self.y-2*tile_size , self.y+3*tile_size,tile_size ) :
-                
-                rect = pygame.Rect( x,y,30, 30)
-                zone_data.append(rect)
-        return zone_data
+                if x == self.x and y == self.y :
+                    continue
+                else :
+                    if self.matrice[i] == 1  :
+                        rect = pygame.Rect( x,y,30, 30)
+                        zone_data.append(rect) 
+            i = i+1               
+        return zone_data 
        
     
     def draw_zone(self):
         if self.activate :
             for rect in self.zone() :
              
-                pygame.draw.rect(self.win, (0, 255, 0),rect )
+                pygame.draw.rect(self.win, (0, 255, 0),rect ,2)
             
             
+class afiche_texte():   # it can be abstrect !!
+    def __init__(self,texte, x_position, y_position, color ):
+        self.texte = texte
+        self.xpos = x_position
+        self.ypos = y_position
+        self.color = color 
+    
+    def draw_title(self, font):        
+        text_surface = font.render(self.texte, True, self.color)
+        win.blit(text_surface, (self.xpos, self.ypos))  # Blit the text to the screen
 
 
-
-
-
-
-
-
+matrice = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]    # here just we need to make sure that the size is the same size of range x and y 
 
 # Initialize wall and player objects
 wal1 = Wall(grass_image, "map.txt", tile_size, win, tile_size, tile_size)
 curs = Cursor(0, 0, win)
-unit1 = unit(x, y, image_player, win)
-unit2 = unit(x*4, y, image_player, win)
+unit1 = unit(x, y, image_player, win,matrice)
+
+texte1 = afiche_texte("hello",1000,30,(255,255,255))
 
 # Game loop
 run = True
@@ -173,14 +193,15 @@ while run:
             unit1.activate = not unit1.activate  
         
 
-    curs.move()
+    curs.move(wal1.len_of_wall_matrice)
+    print("___________________________", wal1.len_of_wall_matrice)
 
-    win.fill((255, 255, 255))
+    win.fill((0,0,0))
     wal1.wall_drawing()
     curs.draw()
     unit1.draw()
     unit1.draw_zone()
-    
+    texte1.draw_title(font)
 
     pygame.display.update()
 
