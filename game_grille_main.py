@@ -1,9 +1,11 @@
 import pygame
 import numpy as np 
 
-from UNIT_AREZKI import * 
+from UNIT_main import * 
 from WALL import *
 from AFFICHE_GAME_RESAULT import * 
+from map_loader import *
+
 
 
 # Initialize pygame
@@ -14,7 +16,8 @@ screan_width = 720
 screan_height = 600
 win = pygame.display.set_mode((screan_width, screan_height))
 pygame.display.set_caption("My Game")
-map_file = r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\pictures\maps_picture\wall.txt"
+map_matrix = MapLoader("difficile").load_map()
+
 
 
 # Player settings
@@ -51,10 +54,11 @@ class Event_manipulation():
                 
                 
 # Initialize wall and player objects
-wal1 = Wall(grass_image, map_file, tile_size, win, tile_size, tile_size)
+wal1 = Wall(grass_image, map_matrix, tile_size, win, tile_size, tile_size)
 unit1 = unit(x, y, image_player, win,wal1,matrice)
 unit2 = unit(x*5, y*5, image_player, win,wal1,matrice)
 texte1 = afiche_texte("hello",1000,30,(255,255,255),win)
+
 
 units = [unit1 ,unit2]
 
@@ -75,7 +79,7 @@ while run:
         if Unit.remove :
             units.remove(Unit)
        
-
+    
     pygame.display.update()
 
 pygame.quit()
