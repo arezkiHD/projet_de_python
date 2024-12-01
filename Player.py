@@ -1,13 +1,7 @@
 import pygame 
-from UNIT_AREZKI import *
+from UNIT_main import *
+from Units_move_map import *
 
-"""
-A faire :
-
-Boucle Game mode :
-Boucle Depar_point jouur par joueur en supprimant une position si jamais choixit par random
-
-"""
 
 # ON part du principe que la map fait 25 par 45
 """ 
@@ -18,7 +12,6 @@ Boucle Depar_point jouur par joueur en supprimant une position si jamais choixit
 - Berzerk  : Zone de deplacement Faibe  ,                            degats Eleve  40pnts/turn , santé Elevée  150 pnts
 - Spectre  : Zone de deplacement Faibe mais tres Large sur les axes, degats Eleve 40 pnts/turn , santé Faible  75  pnts
 """
-points_depart = [[0, 0], [0, 44], [44, 0], [44, 44]]    # Coordonées (x,y) de depart possibles
 
 walk_right  = [pygame.image.load(os.path.join("pictures\humain_male",f"right ({i}).png")) for i in range(1,6) ]
 walk_left   = [pygame.image.load(os.path.join("pictures\humain_male",f"left ({i}).png")) for i in range(1,6) ]
@@ -27,59 +20,11 @@ walk_down   = [pygame.image.load(os.path.join("pictures\humain_male",f"down ({i}
 health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health_bar{i}.png")) for i in range(1,5) ]
 
 
-# Matrices pour la zone de deplacement
-matrice_Clasian  = [0,0,0,0,0,0,0,0,0,0,0,  
-                    0,0,0,0,0,0,0,0,0,0,0,  
-                    0,0,0,0,0,1,0,0,0,0,0,
-                    0,0,0,0,1,1,1,0,0,0,0,
-                    0,0,0,1,1,1,1,1,0,0,0,  
-                    0,0,1,1,1,1,1,1,1,0,0,  
-                    0,0,0,1,1,1,1,1,0,0,0,  
-                    0,0,0,0,1,1,1,0,0,0,0,  
-                    0,0,0,0,0,1,0,0,0,0,0,  
-                    0,0,0,0,0,0,0,0,0,0,0,  
-                    0,0,0,0,0,0,0,0,0,0,0]   
-
-matrice_Rapidzio = [0,0,1,1,1,1,1,1,1,0,0,  
-                    0,1,1,1,1,1,1,1,1,1,0,  
-                    1,1,1,1,1,1,1,1,1,1,1,  
-                    1,1,1,1,1,1,1,1,1,1,1,  
-                    1,1,1,1,1,1,1,1,1,1,1,  
-                    1,1,1,1,1,1,1,1,1,1,1,  
-                    1,1,1,1,1,1,1,1,1,1,1,  
-                    1,1,1,1,1,1,1,1,1,1,1,  
-                    1,1,1,1,1,1,1,1,1,1,1,  
-                    0,1,1,1,1,1,1,1,1,1,0,  
-                    0,0,1,1,1,1,1,1,1,0,0]  
-
-matrice_Berzerk  = [0,0,0,0,0,0,0,0,0,0,0,  
-                    0,0,0,0,0,0,0,0,0,0,0,  
-                    0,0,0,0,0,0,0,0,0,0,0,  
-                    0,0,0,0,1,1,1,0,0,0,0,  
-                    0,0,0,1,1,1,1,1,0,0,0,  
-                    0,0,0,1,1,1,1,1,0,0,0,  
-                    0,0,0,1,1,1,1,1,0,0,0,  
-                    0,0,0,0,1,1,1,0,0,0,0,  
-                    0,0,0,0,0,0,0,0,0,0,0,  
-                    0,0,0,0,0,0,0,0,0,0,0,  
-                    0,0,0,0,0,0,0,0,0,0,0]  
-
-matrice_Spectre  = [1,0,0,0,0,1,0,0,0,0,1,  
-                    0,1,0,0,0,1,0,0,0,1,0,  
-                    0,0,1,0,0,1,0,0,1,0,0,  
-                    0,0,0,1,0,1,0,1,0,0,0,  
-                    0,0,0,0,1,1,1,0,0,0,0,  
-                    1,1,1,1,1,1,1,1,1,1,1,  
-                    0,0,0,0,1,1,1,0,0,0,0,  
-                    0,0,0,1,0,1,0,1,0,0,0,  
-                    0,0,1,0,0,1,0,0,1,0,0,  
-                    0,1,0,0,0,1,0,0,0,1,0,  
-                    1,0,0,0,0,1,0,0,0,0,1] 
 
 
 
 class Units(Unit):
-    def __init__(self, pos_x, pos_y, image_player, win, wall_rect,health_level, base_dammage, matrice_zone= matrice , walk_right=walk_right, walk_left=walk_left, walk_up = walk_up , walk_down = walk_down, pos_depart = []):
+    def __init__(self, pos_x, pos_y, image_player, win, wall_rect, health_level, base_dammage, matrice_zone= matrice , walk_right=walk_right, walk_left=walk_left, walk_up = walk_up , walk_down = walk_down):
         Unit.__init__(self, pos_x, pos_y, image_player, win, wall_rect, health_level, base_dammage, matrice_zone= matrice , walk_right=walk_right, walk_left=walk_left, walk_up = walk_up , walk_down = walk_down)
 
 # CHANGER L'UNIT EN AJOUTANT health_level, base_dammage, start_point = int[1 or 2]
@@ -108,7 +53,7 @@ class Player:
 """ 
     
     def __init__(
-        self, player_number, image_player, win, wall_rect, start_point, game_mode, matrice_zone=None,
+        self, player_number, image_player, win, wall_rect, start_point, game_mode, points_depart, matrice_zone=None,
         walk_right=None, walk_left=None, walk_up=None, walk_down=None, number_of_units=4):
 
         self.player_number = player_number
@@ -118,6 +63,7 @@ class Player:
         self.start_point = start_point
         self.game_mode = game_mode
         self.number_of_units = number_of_units
+        self.points_depart = points_depart
 
         # Obtenir les positions initiales pour chaque unité
         unit_positions = self.get_depart_positions(start_point, game_mode)
@@ -157,7 +103,7 @@ class Player:
 
 
 
-    def get_depart_positions(self, start_point, game_mode):
+    def get_depart_positions(self, start_point, game_mode, points_depart):
         base_x, base_y = points_depart[start_point - 1]                 # points_depart[1 - 1] = points_depart[0] = [0, 0]
 
         # Ajustements en fonction du start_point et game_mode
@@ -216,64 +162,3 @@ class Player:
 
 
 
-
-
-
-
-
-
-"""
-        # Choix position de depart du joueur :  {Potentoellement a mettre dans game}
-        if game_mode == 1:
-            if start_point == 1 :           # start_point == random(1,4) sachant que c'est joueur un puis deux 
-                self.__pos_x_Classian = points_depart[1][0] 
-                self.__pos_y_Classian = points_depart[[1,2]]
-                self.__pos_x_Rapidzio = points_depart[[1,1] + 1]        # En cases, pas en pixels
-                self.__pos_y_Rapidzio = points_depart[[1,2]] 
-                self.__pos_x_Berzerk  = points_depart[[1,1] + 1] 
-                self.__pos_y_Berzerk  = points_depart[[1,2] + 1] 
-                self.__pos_x_Spectre  = points_depart[[1,1]] 
-                self.__pos_y_Spectre  = points_depart[[1,2] + 1] 
-
-            elif start_point == 2 :           
-                self.__pos_x_Classian = points_depart[[2,1]] 
-                self.__pos_y_Classian = points_depart[[2,2]]
-                self.__pos_x_Rapidzio = points_depart[[2,1] + 1] 
-                self.__pos_y_Rapidzio = points_depart[[2,2]]
-                self.__pos_x_Berzerk  = points_depart[[2,1] + 1] 
-                self.__pos_y_Berzerk  = points_depart[[2,2] - 1]        
-                self.__pos_x_Spectre  = points_depart[[2,1]] 
-                self.__pos_y_Spectre  = points_depart[[2,2] - 1]
-
-            elif start_point == 3 :           
-                self.__pos_x_Classian = points_depart[[3,1]] 
-                self.__pos_y_Classian = points_depart[[3,2]]
-                self.__pos_x_Rapidzio = points_depart[[3,1] - 1] 
-                self.__pos_y_Rapidzio = points_depart[[3,2]]
-                self.__pos_x_Berzerk  = points_depart[[3,1] - 1] 
-                self.__pos_y_Berzerk  = points_depart[[3,2] + 1]
-                self.__pos_x_Spectre  = points_depart[[3,1]] 
-                self.__pos_y_Spectre  = points_depart[[3,2] + 1]
-
-            elif start_point == 4 :           
-                self.__pos_x_Classian = points_depart[[4,1]] 
-                self.__pos_y_Classian = points_depart[[4,2]]
-                self.__pos_x_Rapidzio = points_depart[[4,1] - 1] 
-                self.__pos_y_Rapidzio = points_depart[[4,2]]
-                self.__pos_x_Berzerk  = points_depart[[4,1] - 1] 
-                self.__pos_y_Berzerk  = points_depart[[4,2] - 1]
-                self.__pos_x_Spectre  = points_depart[[4,1]] 
-                self.__pos_y_Spectre  = points_depart[[4,2] - 1]
-            else :
-                raise ValueError("Choix de depart dois etre un int entre 1 et 4 compris") 
-            
-            self.__pos_depart = [[self.__pos_x_Classian, self.__pos_y_Classian] , [self.__pos_x_Rapidzio, self.__pos_y_Rapidzio], [self.__pos_x_Berzerk, self.__pos_y_Berzerk], [self.__pos_x_Spectre, self.__pos_y_Spectre]]
-
-"""
-            
-
-
-
-    
-
-    
