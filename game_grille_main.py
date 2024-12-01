@@ -12,8 +12,8 @@ from map_loader import *
 pygame.init()
 
 # Screen dimensions
-screan_width = 720
-screan_height = 600
+screan_width = 300 # 720 =>24 
+screan_height = 300 # 1200 => 40 
 win = pygame.display.set_mode((screan_width, screan_height))
 pygame.display.set_caption("My Game")
 map_matrix = MapLoader("difficile").load_map()
