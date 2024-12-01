@@ -17,7 +17,7 @@ walk_right  = [pygame.image.load(os.path.join("pictures\humain_male",f"right ({i
 walk_left   = [pygame.image.load(os.path.join("pictures\humain_male",f"left ({i}).png")) for i in range(1,6) ]
 walk_up     = [pygame.image.load(os.path.join("pictures\humain_male",f"up ({i}).png")) for i in range(1,6) ]
 walk_down   = [pygame.image.load(os.path.join("pictures\humain_male",f"down ({i}).png")) for i in range(1,5) ]
-health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health_bar{i}.png")) for i in range(1,5) ]
+health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health{i}.png")) for i in range(1,5) ]
 
 
 
@@ -66,7 +66,7 @@ class Player:
         self.points_depart = points_depart
 
         # Obtenir les positions initiales pour chaque unité
-        unit_positions = self.get_depart_positions(start_point, game_mode)
+        unit_positions = self.get_depart_positions(start_point, game_mode,points_depart)
 
         # Créer les unités avec leurs positions initiales et propriétés
     # Classian :    

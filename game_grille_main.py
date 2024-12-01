@@ -14,15 +14,9 @@ pygame.init()
 clock = pygame.time.Clock()  # Pour contrôler le FPS
 FPS = 60
 
-<<<<<<< HEAD
-# Screen dimensions
-screan_width = 300 # 720 =>24 
-screan_height = 300 # 1200 => 40 
-=======
 ## Screen data :
 screan_width = 720
 screan_height = 600
->>>>>>> 057bea712dceb76c68b798c8ae865ad28d4aa4cc
 win = pygame.display.set_mode((screan_width, screan_height))
 pygame.display.set_caption("My Game")
 map_matrix = MapLoader("difficile").load_map()
