@@ -26,6 +26,7 @@ class Wall:
         """Read wall positions from a file and return as a dictionary with wall types."""
         wall_dict = {"water": [], "wall": [], "grass": []}
 
+
         for row in range(0,len(self.map)):
             for col in range(0,len(self.map[row])):  # Correct way to access map[row][col]
                 rect = pygame.Rect(col * self.dim, row * self.dim, self.dim, self.dim)
