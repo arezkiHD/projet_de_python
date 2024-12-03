@@ -15,6 +15,7 @@ walk_left=[pygame.image.load(os.path.join("pictures\humain_male",f"left ({i}).pn
 walk_up=[pygame.image.load(os.path.join("pictures\humain_male",f"up ({i}).png")) for i in range(1,6) ]
 walk_down=[pygame.image.load(os.path.join("pictures\humain_male",f"down ({i}).png")) for i in range(1,5) ]
 health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health{i}.png")) for i in range(1,6) ]
+intro_game_picture=pygame.image.load("pictures\game_manipulation\into_pic.jpg")
 
 
 matrice = [0,0,0,1,0,0,0,  0,0,1,1,1,0,0  ,0,1,1,1,1,1,0,  1,1,1,1,1,1,1,  0,1,1,1,1,1,0,    0,0,1,1,1,0,0 ,  0,0,0,1,0,0,0  ]  # matrice ppir la zone 
@@ -156,30 +157,31 @@ class unit:
                 self.x, self.y = new_x, new_y
             
 
-    def draw(self,health_picture):
+    def draw(self,health_picture,introduction_game):
         """Draw the player on the screen."""
-        if self.health >0 :
-            if self.right:
-                self.win.blit(self.wlak_right[self.walkcount_right], (self.x, self.y))
-            elif self.left:
-                self.win.blit(self.wlak_left[self.walkcount_left], (self.x, self.y))
-            elif self.up:
-                self.win.blit(self.wlak_up[self.walkcount_up], (self.x, self.y))
-            elif self.down:
-                self.win.blit(self.wlak_down[self.walkcount_down], (self.x, self.y))
+        if not introduction_game.move :   
+            if self.health >0 :
+                if self.right:
+                    self.win.blit(self.wlak_right[self.walkcount_right], (self.x, self.y))
+                elif self.left:
+                    self.win.blit(self.wlak_left[self.walkcount_left], (self.x, self.y))
+                elif self.up:
+                    self.win.blit(self.wlak_up[self.walkcount_up], (self.x, self.y))
+                elif self.down:
+                    self.win.blit(self.wlak_down[self.walkcount_down], (self.x, self.y))
 
-            else:
-                self.win.blit(self.image_player, (self.x, self.y))
-            if self.is_selected  :
+                else:
+                    self.win.blit(self.image_player, (self.x, self.y))
+                if self.is_selected  :
 
-                pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)
-                if self.health== 100 :
-                    self.win.blit(health_picture[0], (self.x, self.y-10))
-                elif self.health== 80 :            
-                    self.win.blit(health_picture[1], (self.x, self.y-10))
-                elif self.health== 60 :
-                    self.win.blit(health_picture[2], (self.x, self.y-10))
-                elif self.health== 40:
-                    self.win.blit(health_picture[3], (self.x, self.y-10))
-                elif self.health == 20 :
-                    self.win.blit(health_picture[4], (self.x, self.y-10))
+                    pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)
+                    if self.health== 100 :
+                        self.win.blit(health_picture[0], (self.x, self.y-10))
+                    elif self.health== 80 :            
+                        self.win.blit(health_picture[1], (self.x, self.y-10))
+                    elif self.health== 60 :
+                        self.win.blit(health_picture[2], (self.x, self.y-10))
+                    elif self.health== 40:
+                        self.win.blit(health_picture[3], (self.x, self.y-10))
+                    elif self.health == 20 :
+                        self.win.blit(health_picture[4], (self.x, self.y-10))
