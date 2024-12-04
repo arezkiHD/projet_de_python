@@ -52,8 +52,9 @@ class Event_manipulation():
 
                 if event.type == pygame.KEYDOWN and event.key == self.show_zone_key and unit.is_selected:
                     unit.toggle_zone()
-                if event.type == pygame.KEYDOWN and event.key == self.introduction_move :
+                if event.type == pygame.MOUSEBUTTONDOWN and introduction_game.move :
                     introduction_game.move = False
+                
                 
         
 
@@ -79,7 +80,7 @@ wal1 = Wall(grass_image, map_matrix, tile_size, win, tile_size, tile_size)
 unit1 = unit(x, y, image_player, win,wal1,matrice)
 unit2 = unit(x*5, y*5, image_player, win,wal1,matrice)
 texte1 = afiche_texte("hello",1000,30,(255,255,255),win)
-introduction_Game = introduction_game(intro_game_picture,pygame.K_h)
+introduction_Game = introduction_game(intro_game_picture,pygame.MOUSEBUTTONDOWN)
 
 
 units = [unit1 ,unit2]
