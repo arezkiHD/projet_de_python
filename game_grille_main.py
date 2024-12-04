@@ -52,8 +52,8 @@ class Event_manipulation():
 
                 if event.type == pygame.KEYDOWN and event.key == self.show_zone_key and unit.is_selected:
                     unit.toggle_zone()
-                if event.type == pygame.MOUSEBUTTONDOWN and introduction_game.move :
-                    introduction_game.move = False
+                if event.type == pygame.MOUSEBUTTONDOWN and  introduction_game.i == 0:
+                    introduction_game.i += 1  
                 
                 
         
@@ -64,11 +64,46 @@ class introduction_game():
     def __init__ (self,introduction_pictures,moving_key, win = win) :
         self.introduction_pictures=introduction_pictures
         self.moving_key=moving_key
-        self.move = True
         self.win = win 
+        self.i = 0  # this one i use it because i will use the mouse press for other reason so i add the condition when i == 0  
     def affiche_introduction(self) :
-        if self.move :           
+        if self.i==0 :           
             self.win.blit(self.introduction_pictures, (0,0, screan_width  , screan_height ))
+    def chosing_units_number_to_play(self , play_by_2 , play_by_3 ,corsur_position,press_mouse) :
+           if self.i>0:
+            pos_x_play_by_2 = 100 
+            pos_y_play_by_2 = 100 
+            pos_x_play_by_3 = 500 
+            pos_y_play_by_3 =100
+            [ corsur_position_x , corsur_position_y ] =corsur_position
+            if self.i != 3:
+                if corsur_position_x >=  pos_x_play_by_2-100 and corsur_position_x <= pos_x_play_by_2 + 100  and corsur_position_y >=  pos_y_play_by_2-100 and corsur_position_y <= pos_y_play_by_2 +100  :
+                    play_by_2=pygame.transform.scale(play_by_2,(80,30))                
+                    self.win.blit(play_by_2, (pos_x_play_by_2,pos_y_play_by_2, 80  , 30 )) 
+                    if( press_mouse[2])  : # the right mouse press
+                        self.i +=1
+
+                else:
+                    play_by_2=pygame.transform.scale(play_by_2,(50,30))                
+                    self.win.blit(play_by_2, (pos_x_play_by_2,pos_y_play_by_2, 50  , 30 )) 
+
+                if corsur_position_x >=  pos_x_play_by_3 and corsur_position_x <= pos_x_play_by_3 + 50  and corsur_position_y >=  pos_y_play_by_2 and corsur_position_y <= pos_y_play_by_2 +50 :
+                    play_by_3=pygame.transform.scale(play_by_3,(80,30)) 
+                    self.win.blit(play_by_3, (pos_x_play_by_3,pos_y_play_by_3, 80  , 30 ))
+                    if( press_mouse[2])  :
+                        self.i +=1
+
+
+                else :
+                    play_by_3=pygame.transform.scale(play_by_3,(50,30)) 
+                    self.win.blit(play_by_3, (pos_x_play_by_3,pos_y_play_by_3, 50  , 30 ))
+            
+
+
+        
+
+
+        
             
 
 
@@ -93,13 +128,16 @@ while run:
     EVENT.events_handler(introduction_Game)
     run=EVENT.run
     win.fill((0,0,0))
-    wal1.wall_drawing()
+    wal1.wall_drawing(introduction_Game)
 
     for Unit in  units : 
-        introduction_Game.affiche_introduction()   
+        introduction_Game.affiche_introduction()  
+        introduction_Game.chosing_units_number_to_play(grass_image,image_player,pygame.mouse.get_pos(),pygame.mouse.get_pressed()) 
         Unit.move()         
         Unit.draw_zone()
         Unit.draw(health_picture,introduction_Game)
+        
+        
         if Unit.remove :
             units.remove(Unit)
        

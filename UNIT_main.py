@@ -159,7 +159,7 @@ class unit:
 
     def draw(self,health_picture,introduction_game):
         """Draw the player on the screen."""
-        if not introduction_game.move :   
+        if  introduction_game.i>2 :   
             if self.health >0 :
                 if self.right:
                     self.win.blit(self.wlak_right[self.walkcount_right], (self.x, self.y))

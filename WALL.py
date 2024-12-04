@@ -47,11 +47,12 @@ class Wall:
 
 
 
-    def wall_drawing(self):
-        """Draw all walls on the screen based on their type."""
-        for rect in self.wall_positions["grass"]:
-            self.win.blit(self.grass_image, rect)
-        for rect in self.wall_positions["water"]:
-            self.win.blit(self.water_image, rect)
-        for rect in self.wall_positions["wall"]:
-            self.win.blit(self.wall_image, rect)
+    def wall_drawing(self,introduction_image):
+        if introduction_image.i > 2 : 
+            """Draw all walls on the screen based on their type."""
+            for rect in self.wall_positions["grass"]:
+                self.win.blit(self.grass_image, rect)
+            for rect in self.wall_positions["water"]:
+                self.win.blit(self.water_image, rect)
+            for rect in self.wall_positions["wall"]:
+                self.win.blit(self.wall_image, rect)
