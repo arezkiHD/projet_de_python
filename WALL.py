@@ -49,24 +49,24 @@ class Wall:
                 self.win.blit(self.grass_image, rect)
                 if not  unit.is_selected : 
                     transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                    transparent_surface.fill((0,0,0,100))  
+                    transparent_surface.fill((0,0,0,130))  
                     self.win.blit(transparent_surface,(rect.x , rect.y)) 
                 else :
                     if not any(rect.colliderect(zone) for zone in unit.active_zone )  :   
                         transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                        transparent_surface.fill((0,0,0,100))  
+                        transparent_surface.fill((0,0,0,130))  
                         self.win.blit(transparent_surface,(rect.x , rect.y))
             for rect in self.wall_positions["water"]:
                
                 self.win.blit(self.water_image, rect)
                 if not  unit.is_selected : 
                     transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                    transparent_surface.fill((0,0,0,100))  
+                    transparent_surface.fill((0,0,0,130))  
                     self.win.blit(transparent_surface,(rect.x , rect.y)) 
                 else :
                     if not any(rect.colliderect(zone) for zone in unit.active_zone )  :   
                         transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                        transparent_surface.fill((0,0,0,100))  
+                        transparent_surface.fill((0,0,0,130))  
                         self.win.blit(transparent_surface,(rect.x , rect.y))
                     
 
@@ -75,12 +75,12 @@ class Wall:
                 self.win.blit(self.wall_image, rect)
                 if not  unit.is_selected : 
                     transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                    transparent_surface.fill((0,0,0,100))  
+                    transparent_surface.fill((0,0,0,130))  
                     self.win.blit(transparent_surface,(rect.x , rect.y)) 
                 else :
                     if not any(rect.colliderect(zone) for zone in unit.active_zone )  :   
                         transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                        transparent_surface.fill((0,0,0,100))  
+                        transparent_surface.fill((0,0,0,130))  
                         self.win.blit(transparent_surface,(rect.x , rect.y))
                 
                 

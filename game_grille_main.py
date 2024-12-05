@@ -124,8 +124,8 @@ texte1 = afiche_texte("hello",1000,30,(255,255,255),win)
 introduction_Game = introduction_game(intro_game_picture,pygame.MOUSEBUTTONDOWN)
 
 
-units = [unit1 ,unit2 ]
-
+units = [unit1 ,unit2 ]     # here if one is active the other should not be active so like that our code will work properlly !!
+ 
 
 run = True
 while run:
