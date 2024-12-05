@@ -12,11 +12,15 @@ from map_loader import *
 pygame.init()
 
 # Screen dimensions
-screan_width = 720
-screan_height = 800
+screan_width = 1280
+screan_height = 720
+
+
+
 win = pygame.display.set_mode((screan_width, screan_height))
 pygame.display.set_caption("My Game")
-map_matrix = MapLoader("facile").load_map()
+#map_matrix = MapLoader("facile").load_map()
+map_matrix=np.array(new_map)
 
 
 
@@ -69,7 +73,7 @@ class introduction_game():
     def affiche_introduction(self) :
         if self.i==0 :           
             self.win.blit(self.introduction_pictures, (0,0, screan_width  , screan_height ))
-    def chosing_units_number_to_play(self , play_by_2 , play_by_3 ,corsur_position,press_mouse) :
+    def chosing_units_number_to_play(self , play_by_2 , play_by_3 ,corsur_position,press_mouse) :  # here i will use the same method to work with unit chosing so i will try to generlize it and creat son classes !!!!
            if self.i>0:
             pos_x_play_by_2 = 100 
             pos_y_play_by_2 = 100 
@@ -97,6 +101,8 @@ class introduction_game():
                 else :
                     play_by_3=pygame.transform.scale(play_by_3,(50,30)) 
                     self.win.blit(play_by_3, (pos_x_play_by_3,pos_y_play_by_3, 50  , 30 ))
+
+    
             
 
 
@@ -113,35 +119,48 @@ class introduction_game():
 # Initialize wall and player objects
 wal1 = Wall(grass_image, map_matrix, tile_size, win, tile_size, tile_size)
 unit1 = unit(x, y, image_player, win,wal1,matrice)
-unit2 = unit(x*5, y*5, image_player, win,wal1,matrice)
+unit2 = unit(x+60, y, image_player, win,wal1,matrice)
 texte1 = afiche_texte("hello",1000,30,(255,255,255),win)
 introduction_Game = introduction_game(intro_game_picture,pygame.MOUSEBUTTONDOWN)
 
 
-units = [unit1 ,unit2]
+units = [unit1 ,unit2 ]
 
-# Game loop
+
 run = True
 while run:
     pygame.time.delay(60)
-    EVENT = Event_manipulation(pygame.event.get(),run,units,[pygame.K_a , pygame.K_z, pygame.K_h], pygame.K_SPACE, pygame.K_h  )
-    EVENT.events_handler(introduction_Game)
-    run=EVENT.run
-    win.fill((0,0,0))
-    wal1.wall_drawing(introduction_Game)
-
-    for Unit in  units : 
-        introduction_Game.affiche_introduction()  
-        introduction_Game.chosing_units_number_to_play(grass_image,image_player,pygame.mouse.get_pos(),pygame.mouse.get_pressed()) 
-        Unit.move()         
-        Unit.draw_zone()
-        Unit.draw(health_picture,introduction_Game)
-        
-        
-        if Unit.remove :
-            units.remove(Unit)
-       
     
+    # Handle events
+    EVENT = Event_manipulation(pygame.event.get(), run, units, [pygame.K_a, pygame.K_z, pygame.K_h], pygame.K_SPACE, pygame.K_h)
+    EVENT.events_handler(introduction_Game)
+    run = EVENT.run
+    
+    # Clear the screen
+    win.fill((105, 105, 105))
+    
+    # Handle introduction phase
+    introduction_Game.affiche_introduction()
+    introduction_Game.chosing_units_number_to_play(grass_image, image_player, pygame.mouse.get_pos(), pygame.mouse.get_pressed())
+    
+    # Draw walls
+    for Unit in units:
+        wal1.wall_drawing(introduction_Game, Unit)
+
+    # Draw and update all units
+    units_to_remove = []  # Temporary list for units to remove
+    for Unit in units:
+        Unit.move()
+        Unit.draw_zone()
+        Unit.draw(health_picture, introduction_Game)
+        if Unit.remove:
+            units_to_remove.append(Unit)
+    
+    # Remove marked units after iteration
+    for Unit in units_to_remove:
+        units.remove(Unit)
+
+    # Update display
     pygame.display.update()
 
 pygame.quit()

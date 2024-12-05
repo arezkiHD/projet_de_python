@@ -10,7 +10,7 @@ tile_size = 30  # Tile size for grid alignment
 
 
 
-wlak_right=[pygame.image.load(os.path.join("pictures\humain_male",f"right ({i}).png")) for i in range(1,6) ]
+walk_right=[pygame.image.load(os.path.join("pictures\humain_male",f"right ({i}).png")) for i in range(1,6) ]
 walk_left=[pygame.image.load(os.path.join("pictures\humain_male",f"left ({i}).png")) for i in range(1,6) ]
 walk_up=[pygame.image.load(os.path.join("pictures\humain_male",f"up ({i}).png")) for i in range(1,6) ]
 walk_down=[pygame.image.load(os.path.join("pictures\humain_male",f"down ({i}).png")) for i in range(1,5) ]
@@ -23,7 +23,7 @@ matrice = [0,0,0,1,0,0,0,  0,0,1,1,1,0,0  ,0,1,1,1,1,1,0,  1,1,1,1,1,1,1,  0,1,1
 
 
 class unit:
-    def __init__(self, pos_x, pos_y, image_player, win, wall_rect,matrice_zone= matrice , wlak_right=wlak_right, wlak_left=walk_left, wlak_up = walk_up , walk_down = walk_down):
+    def __init__(self, pos_x, pos_y, image_player, win, wall_rect,matrice_zone= matrice , wlak_right=walk_right, wlak_left=walk_left, wlak_up = walk_up , walk_down = walk_down):
         self.x = pos_x
         self.y = pos_y
         self.wall_rect = wall_rect  
@@ -98,12 +98,14 @@ class unit:
         if self.activate:
             self.zone_origin = (self.x, self.y)  # Lock the zone to the current position
             self.active_zone = self.calculate_zone(self.zone_origin[0], self.zone_origin[1])
-
+    
     def draw_zone(self ):
-
+        zone=[]
         if self.activate and self.is_selected and not self.remove:
             for rect in self.active_zone:
                 pygame.draw.rect(self.win, (0, 255, 0), rect, 2)
+                zone.append(rect)
+        return zone
 
     def move(self):
         self.to_remove()
