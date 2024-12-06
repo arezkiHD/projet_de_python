@@ -3,6 +3,7 @@ from WALL import *
 from AFFICHE_GAME_RESAULT import * 
 from map_loader import *
 from Menu_Game import *
+from EVENT import*
 
 from game_variables import *
 
@@ -20,8 +21,6 @@ map_matrix=np.array(new_map)
 
 
 # Player settings
-x = 30
-y = 30
 
 font = pygame.font.SysFont("Arial", 50)
 
@@ -30,33 +29,6 @@ font = pygame.font.SysFont("Arial", 50)
 
 
 
-class Event_manipulation():
-    def __init__(self, event,run, units,unit_key_selection,show_zone_key, introduction_move ):
-        self.event = event 
-        self.run= run 
-        self.units = units 
-        self.unit_key_selection= unit_key_selection
-        self.show_zone_key =show_zone_key
-        self.introduction_move = introduction_move 
-        
-
-    def events_handler(self,introduction_game):
-        for event in self.event :
-            if event.type == pygame.QUIT:
-                self.run = False
-            for i,unit in enumerate(self.units) :
-                # here to manipulate the key sected for each unit 
-                if event.type == pygame.KEYDOWN and event.key == self.unit_key_selection[i]:
-                    unit.is_selected = not unit.is_selected 
-
-
-                if event.type == pygame.KEYDOWN and event.key == self.show_zone_key and unit.is_selected:
-                    unit.toggle_zone()
-                if event.type == pygame.MOUSEBUTTONDOWN and  introduction_game.i == 0:
-                    introduction_game.i += 1  
-                
-                
-        
 
 
 
@@ -90,14 +62,14 @@ while run:
     
     # Handle events
     EVENT = Event_manipulation(pygame.event.get(), run, units, [pygame.K_a, pygame.K_z, pygame.K_h], pygame.K_SPACE, pygame.K_h)
-    EVENT.events_handler(introduction_Game)
+    EVENT.events_handler()
     run = EVENT.run
     
     # Clear the screen
     win.fill((105, 105, 105))
     
     # Handle introduction phase
-    introduction_Game.affiche_introduction() # to affiche the first picture of the introduction game 
+    introduction_Game.affiche_introduction(pygame.mouse.get_pressed()) # to affiche the first picture of the introduction game 
     
     introduction_Game.chosing( number_of_player ,pygame.mouse.get_pos(),pygame.mouse.get_pressed() ) # to select on the menu if 2v2 or 3v3
     introduction_Game.chosing(unit_selection_player1 ,pygame.mouse.get_pos(),pygame.mouse.get_pressed())   # to select units 

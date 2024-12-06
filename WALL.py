@@ -34,7 +34,7 @@ class Wall:
         return wall_dict
     
     def wall_drawing(self,introduction_image,unit):
-        if introduction_image.i > unit_selection_player2["choice2"]["number_of_click_max"] :  # the number of click max before starting the game 
+        if introduction_image.i >= unit_selection_player2["choice2"]["number_of_click_max"] :  # the number of click max before starting the game 
             """Draw all walls on the screen based on their type."""
             for rect in self.wall_positions["grass"]:
             

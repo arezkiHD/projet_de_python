@@ -10,15 +10,27 @@ class introduction_game():
         self.i = 0  # this one i use it because i will use the mouse press for other reason so i add the condition when i == 0  
         self.player = None   # to stock if 2v2 or 3v3
         self.unit = []    # to stock units for each player 
-    def affiche_introduction(self) :
+        self.mouse_down = False
+    def affiche_introduction(self,press_mouse) :
         if self.i==0 :           
             self.win.blit(self.introduction_pictures, (0,0, screan_width  , screan_height ))
+            if press_mouse[2]:                   
+                if not self.mouse_down:
+                    self.i +=1
+                    self.mouse_down = True 
+
+
+
+            
             
             
 
     def chosing(self , choices ,corsur_position,press_mouse ) :
         cursor_x , cursor_y = corsur_position
-        if self.i <=   choices["choice2"]["number_of_click_max"] and self.i  >=   choices["choice1"]["number_of_click_min"]  :
+        number_of_click_max= choices["choice2"]["number_of_click_max"]
+        number_of_click_min = choices["choice1"]["number_of_click_min"]
+        
+        if self.i <   number_of_click_max and self.i  >=  number_of_click_min  :
             for  __ ,choice_data in choices.items():
                 # Check if the cursor is within the bounds of the current choice
                 if (choice_data["pos_x"] <= cursor_x <= choice_data["pos_x"] + choice_data["width_before"] and
@@ -32,12 +44,19 @@ class introduction_game():
                     hover_y = choice_data["pos_y"] - (choice_data["height_after"] - choice_data["height_before"]) // 2
                     self.win.blit(scaled_picture, (hover_x, hover_y))
                     # Check for a click to select the option
-                    if press_mouse[2]:  
-                        self.i +=1 
-                        if len(choices)==2 :
-                            self.player = choice_data["name"]
-                        elif len(choices) == 3 :
-                            self.unit.append(choice_data["name"])
+                    if press_mouse[2]:                         
+                         
+                        if not self.mouse_down:
+                            pygame.draw.rect(self.win, (0, 255, 0), (hover_x, hover_y,choice_data["width_after"], choice_data["height_after"]), 2)
+                            if len(choices)==2 :
+                                self.player = choice_data["name"]
+                            elif len(choices) == 3 :
+                                self.unit.append(choice_data["name"])
+
+                            self.i +=1
+                            self.mouse_down = True
+                            print(self.i) 
+                        
 
                             
 
@@ -48,6 +67,9 @@ class introduction_game():
                         (choice_data["width_before"], choice_data["height_before"])
                     )
                     self.win.blit(scaled_picture, (choice_data["pos_x"], choice_data["pos_y"]))
+            
+            if not press_mouse[2]:
+                self.mouse_down = False
 
             
 
@@ -57,36 +79,35 @@ class introduction_game():
 
 
         
-    def chosing_units_number_to_play(self , play_by_2 , play_by_3 ,corsur_position,press_mouse) :  # here i will use the same method to work with unit chosing so i will try to generlize it and creat son classes !!!!
-           if self.i>0:
-            pos_x_play_by_2 = 100 
-            pos_y_play_by_2 = 100 
-            pos_x_play_by_3 = 500 
-            pos_y_play_by_3 =100
-            [ corsur_position_x , corsur_position_y ] =corsur_position
-            if self.i != 3:
-                if corsur_position_x >=  pos_x_play_by_2-100 and corsur_position_x <= pos_x_play_by_2 + 100  and corsur_position_y >=  pos_y_play_by_2-100 and corsur_position_y <= pos_y_play_by_2 +100  :
-                    play_by_2=pygame.transform.scale(play_by_2,(80,30))                
-                    self.win.blit(play_by_2, (pos_x_play_by_2,pos_y_play_by_2, 80  , 30 )) 
-                    if( press_mouse[2])  : # the right mouse press
-                        self.i +=1
-
-                else:
-                    play_by_2=pygame.transform.scale(play_by_2,(50,30))                
-                    self.win.blit(play_by_2, (pos_x_play_by_2,pos_y_play_by_2, 50  , 30 )) 
-
-                if corsur_position_x >=  pos_x_play_by_3 and corsur_position_x <= pos_x_play_by_3 + 50  and corsur_position_y >=  pos_y_play_by_2 and corsur_position_y <= pos_y_play_by_2 +50 :
-                    play_by_3=pygame.transform.scale(play_by_3,(80,30)) 
-                    self.win.blit(play_by_3, (pos_x_play_by_3,pos_y_play_by_3, 80  , 30 ))
-                    if( press_mouse[2])  :
-                        self.i +=1
-
-
-                else :
-                    play_by_3=pygame.transform.scale(play_by_3,(50,30)) 
-                    self.win.blit(play_by_3, (pos_x_play_by_3,pos_y_play_by_3, 50  , 30 ))
 
     
-            
     
-            
+    
+    
+    
+    
+    
+   
+   
+   
+    
+    
+
+    
+    
+    
+
+    
+    
+    
+    
+
+
+    
+    
+    
+
+
+    
+
+    

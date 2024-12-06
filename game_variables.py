@@ -7,6 +7,9 @@ screan_height = 720
 
 tile_size = 30
 
+x = 30
+y = 30
+
 
 image_player =  pygame.image.load(os.path.join("pictures\humain_male", 'up (2).png')) 
 grass_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'grass.png')) 
@@ -57,7 +60,7 @@ unit_selection_player1 = {  # here i stock information to chose on the menu to p
         "width_before" : 90 ,
         "height_after" : 180 ,
         "width_after" : 180 ,
-        "number_of_click_min" : 3,
+        "number_of_click_min" :2 ,
 
  },
 
@@ -71,7 +74,7 @@ unit_selection_player1 = {  # here i stock information to chose on the menu to p
     "width_before" : 90 ,
     "height_after" : 180,
     "width_after" :  180 ,
-    "number_of_click_max" : 8,
+    "number_of_click_max" : 5,
       
       }, 
 
@@ -98,7 +101,7 @@ unit_selection_player1 = {  # here i stock information to chose on the menu to p
 
 unit_selection_player2 = {  # here i stock information to chose on the menu to play 2 vs 2 or 3 vs 3 
     "choice1" : {   
-        "name" : "U1" , 
+        "name" : "U1====" , 
         "pos_x" : 30, 
         "pos_y" : 500 ,
         "picture" : grass_image, 
@@ -106,13 +109,13 @@ unit_selection_player2 = {  # here i stock information to chose on the menu to p
         "width_before" : 90 ,
         "height_after" : 180 ,
         "width_after" : 180 ,
-        "number_of_click_min" : 9,
+        "number_of_click_min" : 5,
 
  },
 
     "choice2" :{ 
          
-    "name" : "U2" ,    
+    "name" : "U2====" ,    
     "pos_x" : 330 , 
     "pos_y" : 500 ,
     "picture" : image_player,
@@ -120,7 +123,7 @@ unit_selection_player2 = {  # here i stock information to chose on the menu to p
     "width_before" : 90 ,
     "height_after" : 180,
     "width_after" :  180 ,
-    "number_of_click_max" : 14,
+    "number_of_click_max" : 8,
       
       }, 
 
@@ -129,7 +132,7 @@ unit_selection_player2 = {  # here i stock information to chose on the menu to p
 
     "choice3" :{ 
      
- "name" : "U3" ,    
+ "name" : "U3====" ,    
 "pos_x" : 630 , 
 "pos_y" : 500 ,
 "picture" : image_player,
