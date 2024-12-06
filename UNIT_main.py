@@ -1,8 +1,9 @@
-import pygame
-import os
 from WALL import *
 
-tile_size = 30  # Tile size for grid alignment
+from game_variables import *
+
+
+
 
 # Load animations
 
@@ -161,7 +162,7 @@ class unit:
 
     def draw(self,health_picture,introduction_game):
         """Draw the player on the screen."""
-        if  introduction_game.i>2 :   
+        if  introduction_game.i>unit_selection_player2["choice2"]["number_of_click_max"]:   
             if self.health >0 :
                 if self.right:
                     self.win.blit(self.wlak_right[self.walkcount_right], (self.x, self.y))

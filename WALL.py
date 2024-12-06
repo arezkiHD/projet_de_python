@@ -1,12 +1,4 @@
-import pygame
-import os 
-
-image_player =  pygame.image.load(os.path.join("pictures\humain_male", 'up (2).png')) 
-grass_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'grass.png')) 
-water_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'water.png')) 
-wall_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'wall.png')) 
-
-tile_size = 30
+from game_variables import *
 
 class Wall:
     def __init__(self, grass_image, map, dim, win, width, height, water_image=water_image, wall_image=wall_image):
@@ -42,7 +34,7 @@ class Wall:
         return wall_dict
     
     def wall_drawing(self,introduction_image,unit):
-        if introduction_image.i > 2 : 
+        if introduction_image.i > unit_selection_player2["choice2"]["number_of_click_max"] :  # the number of click max before starting the game 
             """Draw all walls on the screen based on their type."""
             for rect in self.wall_positions["grass"]:
             
