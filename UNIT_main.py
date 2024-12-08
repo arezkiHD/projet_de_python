@@ -1,36 +1,16 @@
 from WALL import *
-
 from game_variables import *
 
 
 
 
-# Load animations
-
-
-
-
-
-walk_right=[pygame.image.load(os.path.join("pictures\humain_male",f"right ({i}).png")) for i in range(1,6) ]
-walk_left=[pygame.image.load(os.path.join("pictures\humain_male",f"left ({i}).png")) for i in range(1,6) ]
-walk_up=[pygame.image.load(os.path.join("pictures\humain_male",f"up ({i}).png")) for i in range(1,6) ]
-walk_down=[pygame.image.load(os.path.join("pictures\humain_male",f"down ({i}).png")) for i in range(1,5) ]
-health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health{i}.png")) for i in range(1,6) ]
-intro_game_picture=pygame.image.load("pictures\game_manipulation\into_pic.jpg")
-
-
-matrice = [0,0,0,1,0,0,0,  0,0,1,1,1,0,0  ,0,1,1,1,1,1,0,  1,1,1,1,1,1,1,  0,1,1,1,1,1,0,    0,0,1,1,1,0,0 ,  0,0,0,1,0,0,0  ]  # matrice ppir la zone 
-
-
-
 class unit:
-    def __init__(self, pos_x, pos_y, image_player, win, wall_rect,matrice_zone= matrice , wlak_right=walk_right, wlak_left=walk_left, wlak_up = walk_up , walk_down = walk_down):
-        self.x = pos_x
-        self.y = pos_y
+    def __init__(self,pos, win, wall_rect,matrice_zone , wlak_right, wlak_left, wlak_up , walk_down ):
+        self.x = pos[0]
+        self.y = pos[1]
         self.wall_rect = wall_rect  
         self.health = 100  
         
-        self.image_player = image_player
         self.win = win
         self.matrice = matrice_zone
         
@@ -49,7 +29,6 @@ class unit:
         self.up = False
         self.down = False
         self.is_selected = False
-        self.activate = False
         self.remove = False
 
         self.walkcount_left = 0
@@ -58,24 +37,26 @@ class unit:
         self.walkcount_down = 0
 
         self.active_zone = []
-        self.zone_origin = (self.x, self.y)  # Origin of the zone when activated
 
     def calculate_zone(self, origin_x, origin_y):
         """Calculate the movable zone based on a fixed origin."""
         zone_data = []
         if not self.remove :
             i = 0
-            for x in range(origin_x - 3 * tile_size, origin_x + 4 * tile_size, tile_size):
-                for y in range(origin_y - 3 * tile_size, origin_y + 4 * tile_size, tile_size):
+            for x in range(origin_x - 5 * tile_size, origin_x + 6 * tile_size, tile_size):
+                for y in range(origin_y - 5 * tile_size, origin_y + 6 * tile_size, tile_size):
                     if self.matrice[i] == 1:
                         rect = pygame.Rect(x, y, tile_size, tile_size)
                         if not any(rect.colliderect(wall) for wall in self.wall_rect.wall_positions["wall"] ) :                        
                             zone_data.append(rect)
 
                     i += 1
+
+
         else :
 
             zone_data= []
+        
             
         return zone_data
     
@@ -93,25 +74,22 @@ class unit:
             self.remove = True   
 
 
-    def toggle_zone(self):
-        """Toggle the activation and recalculate the active zone if needed."""
-        self.activate = not self.activate
-        if self.activate:
-            self.zone_origin = (self.x, self.y)  # Lock the zone to the current position
-            self.active_zone = self.calculate_zone(self.zone_origin[0], self.zone_origin[1])
     
-    def draw_zone(self ):
-        zone=[]
-        if self.activate and self.is_selected and not self.remove:
-            for rect in self.active_zone:
-                pygame.draw.rect(self.win, (0, 255, 0), rect, 2)
-                zone.append(rect)
-        return zone
+    def draw_zone(self,introduction_image ):
+        if introduction_image.i >= unit_selection_player2["choice2"]["number_of_click_max"]: 
+     # Draw grass tiles
+            zone=[]
+            if  self.is_selected and not self.remove:
+                for rect in self.active_zone:
+                    #pygame.draw.rect(self.win, (0, 255, 0), rect, 2)
+                    zone.append(rect)
+            return zone
 
     def move(self):
         self.to_remove()
-        if not self.remove : self.passes_through_trap()
-        """Handle player movement and collision detection."""
+        if not self.remove :
+            self.passes_through_trap()
+        
         if self.is_selected and self.active_zone:
             keys = pygame.key.get_pressed()
             new_x, new_y = self.x, self.y
@@ -161,7 +139,7 @@ class unit:
             
 
     def draw(self,health_picture,introduction_game):
-        """Draw the player on the screen."""
+        
         if  introduction_game.i>=unit_selection_player2["choice2"]["number_of_click_max"]:   
             if self.health >0 :
                 if self.right:
@@ -174,7 +152,7 @@ class unit:
                     self.win.blit(self.wlak_down[self.walkcount_down], (self.x, self.y))
 
                 else:
-                    self.win.blit(self.image_player, (self.x, self.y))
+                    self.win.blit(self.wlak_down[0], (self.x, self.y))
                 if self.is_selected  :
 
                     pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)

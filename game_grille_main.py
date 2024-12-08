@@ -4,6 +4,7 @@ from AFFICHE_GAME_RESAULT import *
 from map_loader import *
 from Menu_Game import *
 from EVENT import*
+from PLAYER import*
 
 from game_variables import *
 
@@ -13,10 +14,10 @@ from game_variables import *
 pygame.init()
 
 # Screen dimensions
-win = pygame.display.set_mode((screan_width, screan_height))
+
 pygame.display.set_caption("My Game")
 #map_matrix = MapLoader("facile").load_map()
-map_matrix=np.array(new_map)
+map_matrix=new_map
 
 
 
@@ -46,14 +47,13 @@ font = pygame.font.SysFont("Arial", 50)
                 
 # Initialize wall and player objects
 wal1 = Wall(grass_image, map_matrix, tile_size, win, tile_size, tile_size)
-unit1 = unit(x, y, image_player, win,wal1,matrice)
-unit2 = unit(x+60, y, image_player, win,wal1,matrice)
 texte1 = afiche_texte("hello",1000,30,(255,255,255),win)
 introduction_Game = introduction_game(intro_game_picture,win)
+ #def __init__(self,units_positions,units_choice  , image_player,wall):
 
+player1=Player(player1_pos,["unit_Spectre","unit_Clasian", "unit_Spectre","unit_Clasian"],False,intro_game_picture,wal1)
+player2=Player(player2_pos,["unit_Spectre","unit_Clasian" , "unit_Spectre","unit_Clasian"],True ,intro_game_picture,wal1)
 
-
-units = [unit1 ,unit2 ]     # here if one is active the other should not be active so like that our code will work properlly !!
  
 
 run = True
@@ -61,8 +61,8 @@ while run:
     pygame.time.delay(60)
     
     # Handle events
-    EVENT = Event_manipulation(pygame.event.get(), run, units, [pygame.K_a, pygame.K_z, pygame.K_h], pygame.K_SPACE, pygame.K_h)
-    EVENT.events_handler()
+    EVENT = Event_manipulation(pygame.event.get(), run, player1.units,player2.units, [pygame.K_a, pygame.K_z, pygame.K_e, pygame.K_r ])
+    EVENT.events_handler(player1,player2)
     run = EVENT.run
     
     # Clear the screen
@@ -75,28 +75,17 @@ while run:
     introduction_Game.chosing(unit_selection_player1 ,pygame.mouse.get_pos(),pygame.mouse.get_pressed())   # to select units 
     introduction_Game.chosing(unit_selection_player2 ,pygame.mouse.get_pos(),pygame.mouse.get_pressed())   # to select units 
 
+    wal1.wall_drawing(introduction_Game, player2.units +player1.units)
+
+    player2.play(introduction_Game)
+
+    player1.play(introduction_Game)
+    
+    
+    
     
 
 
-
-   
-    
-    # Draw walls
-    for Unit in units:
-        wal1.wall_drawing(introduction_Game, Unit)
-
-    # Draw and update all units
-    units_to_remove = []  # Temporary list for units to remove
-    for Unit in units:
-        Unit.move()
-        Unit.draw_zone()
-        Unit.draw(health_picture, introduction_Game)
-        if Unit.remove:
-            units_to_remove.append(Unit)
-    
-    # Remove marked units after iteration
-    for Unit in units_to_remove:
-        units.remove(Unit)
 
     # Update display
     pygame.display.update()
@@ -104,5 +93,4 @@ while run:
 pygame.quit()
 
 
-print(introduction_Game.player)
-print(introduction_Game.unit)
+print("=================>>", player1.play_times)

@@ -32,52 +32,53 @@ class Wall:
                     wall_dict["wall"].append(rect)        
 
         return wall_dict
-    
-    def wall_drawing(self,introduction_image,unit):
-        if introduction_image.i >= unit_selection_player2["choice2"]["number_of_click_max"] :  # the number of click max before starting the game 
-            """Draw all walls on the screen based on their type."""
+
+    def wall_drawing(self, introduction_image, units):
+        """Draw walls based on the collective state of all units."""
+        if introduction_image.i >= unit_selection_player2["choice2"]["number_of_click_max"]:  
+            # Draw grass tiles
             for rect in self.wall_positions["grass"]:
-            
                 self.win.blit(self.grass_image, rect)
-                if not  unit.is_selected : 
+                # Determine if any unit affects this tile
+                should_be_transparent = True
+                for unit in units:
+                    if unit.is_selected and any(rect.colliderect(zone) for zone in unit.active_zone):
+                        should_be_transparent = False
+                        break
+                if should_be_transparent:
                     transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                    transparent_surface.fill((0,0,0,130))  
-                    self.win.blit(transparent_surface,(rect.x , rect.y)) 
-                else :
-                    if not any(rect.colliderect(zone) for zone in unit.active_zone )  :   
-                        transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                        transparent_surface.fill((0,0,0,130))  
-                        self.win.blit(transparent_surface,(rect.x , rect.y))
+                    transparent_surface.fill((0, 0, 0, 130))
+                    self.win.blit(transparent_surface, (rect.x, rect.y))
+    
+            # Draw water tiles
             for rect in self.wall_positions["water"]:
-               
                 self.win.blit(self.water_image, rect)
-                if not  unit.is_selected : 
+                should_be_transparent = True
+                for unit in units:
+                    if unit.is_selected and any(rect.colliderect(zone) for zone in unit.active_zone):
+                        should_be_transparent = False
+                        break
+                if should_be_transparent:
                     transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                    transparent_surface.fill((0,0,0,130))  
-                    self.win.blit(transparent_surface,(rect.x , rect.y)) 
-                else :
-                    if not any(rect.colliderect(zone) for zone in unit.active_zone )  :   
-                        transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                        transparent_surface.fill((0,0,0,130))  
-                        self.win.blit(transparent_surface,(rect.x , rect.y))
-                    
-
-
+                    transparent_surface.fill((0, 0, 0, 130))
+                    self.win.blit(transparent_surface, (rect.x, rect.y))
+    
+            # Draw wall tiles
             for rect in self.wall_positions["wall"]:
                 self.win.blit(self.wall_image, rect)
-                if not  unit.is_selected : 
+                should_be_transparent = True
+                for unit in units:
+                    if unit.is_selected and any(rect.colliderect(zone) for zone in unit.active_zone):
+                        should_be_transparent = False
+                        break
+                if should_be_transparent:
                     transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                    transparent_surface.fill((0,0,0,130))  
-                    self.win.blit(transparent_surface,(rect.x , rect.y)) 
-                else :
-                    if not any(rect.colliderect(zone) for zone in unit.active_zone )  :   
-                        transparent_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                        transparent_surface.fill((0,0,0,130))  
-                        self.win.blit(transparent_surface,(rect.x , rect.y))
-                
-                
+                    transparent_surface.fill((0, 0, 0, 130))
+                    self.win.blit(transparent_surface, (rect.x, rect.y))
 
-                
+
+
+
 
                 
                

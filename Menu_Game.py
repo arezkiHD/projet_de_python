@@ -17,13 +17,7 @@ class introduction_game():
             if press_mouse[2]:                   
                 if not self.mouse_down:
                     self.i +=1
-                    self.mouse_down = True 
-
-
-
-            
-            
-            
+                    self.mouse_down = True                         
 
     def chosing(self , choices ,corsur_position,press_mouse ) :
         cursor_x , cursor_y = corsur_position
@@ -47,7 +41,7 @@ class introduction_game():
                     if press_mouse[2]:                         
                          
                         if not self.mouse_down:
-                            pygame.draw.rect(self.win, (0, 255, 0), (hover_x, hover_y,choice_data["width_after"], choice_data["height_after"]), 2)
+                            pygame.draw.rect(self.win, (255, 0, 0), (hover_x, hover_y,choice_data["width_after"], choice_data["height_after"]), 2)
                             if len(choices)==2 :
                                 self.player = choice_data["name"]
                             elif len(choices) == 3 :
@@ -77,10 +71,6 @@ class introduction_game():
                                         
 
 
-
-        
-
-    
     
     
     
