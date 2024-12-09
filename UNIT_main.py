@@ -1,35 +1,18 @@
-import pygame
-import os
 from WALL import *
+from game_variables import *
 
-tile_size = 30  # Tile size for grid alignment
-
-# Load animations
-
-
-
-
-
-walk_right=[pygame.image.load(os.path.join("pictures\humain_male",f"right ({i}).png")) for i in range(1,6) ]
-walk_left=[pygame.image.load(os.path.join("pictures\humain_male",f"left ({i}).png")) for i in range(1,6) ]
-walk_up=[pygame.image.load(os.path.join("pictures\humain_male",f"up ({i}).png")) for i in range(1,6) ]
-walk_down=[pygame.image.load(os.path.join("pictures\humain_male",f"down ({i}).png")) for i in range(1,5) ]
-health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health{i}.png")) for i in range(1,6) ]
-
-
-matrice = [0,0,0,1,0,0,0,  0,0,1,1,1,0,0  ,0,1,1,1,1,1,0,  1,1,1,1,1,1,1,  0,1,1,1,1,1,0,    0,0,1,1,1,0,0 ,  0,0,0,1,0,0,0  ]  # matrice ppir la zone 
 
 
 
 class Unit:
-    def __init__(self, pos_x, pos_y, image_player, win, wall_rect, health_level, base_dammage, matrice_zone= matrice , walk_right=walk_right, walk_left=walk_left, walk_up = walk_up , walk_down = walk_down):
-        self.x = pos_x
-        self.y = pos_y
-        self.wall_rect = wall_rect     
-        self.image_player = image_player
+    def __init__(self,pos, win, wall_rect,matrice_zone , walk_right, walk_left, walk_up , walk_down, max_health, base_dammage):
+        self.x = pos[0]
+        self.y = pos[1]
+        self.wall_rect = wall_rect  
+        self.health_level = max_health 
+        
         self.win = win
         self.matrice = matrice_zone
-        self.health_level = health_level
         self.base_dammage = base_dammage
         
         
@@ -47,7 +30,6 @@ class Unit:
         self.up = False
         self.down = False
         self.is_selected = False
-        self.activate = False
         self.remove = False
 
         self.walkcount_left  = 0
@@ -56,7 +38,6 @@ class Unit:
         self.walkcount_down  = 0
 
         self.active_zone = []
-        self.zone_origin = (self.x, self.y)  # Origin of the zone when activated
 
     def calculate_zone(self, origin_x, origin_y):
         """Calculate the movable zone based on a fixed origin."""
@@ -72,8 +53,12 @@ class Unit:
                             zone_data.append(rect)
 
                     i += 1
+
+
         else :
             zone_data= []
+        
+            
         return zone_data
     
     # Zone de piege dans la map :
@@ -85,30 +70,37 @@ class Unit:
                 self.wall_rect.wall_positions["water"].remove(water)
                 self.wall_rect.wall_positions["grass"].append(pygame.Rect(self.x,self.y,tile_size,tile_size))
 
+    # Passage par le Bonus de Vie (potion) dans la map :
+    def passes_through_potion(self) :
+        rect = pygame.Rect(self.x, self.y, tile_size, tile_size)
+        for potion in self.wall_rect.wall_positions["Health_raise"] :
+            if  rect.colliderect(potion)   :                             # Passe dans l'eau degat = 20 pnts
+                self.health = self.health_level-20
+                self.wall_rect.wall_positions["Health_raise"].remove(potion)
+                self.wall_rect.wall_positions["grass"].append(pygame.Rect(self.x,self.y,tile_size,tile_size))
+
     # Elimination d'une unité :
     def to_remove(self) :
         if self.health_level <= 0 :
             self.remove = True   
 
-    # paermet d'Afficher (ou non) la zone de marche :
-    def toggle_zone(self):
-        """Toggle the activation and recalculate the active zone if needed."""
-        self.activate = not self.activate
-        if self.activate:
-            self.zone_origin = (self.x, self.y)  # Lock the zone to the current position
-            self.active_zone = self.calculate_zone(self.zone_origin[0], self.zone_origin[1])
 
-    # Afficher la zone de marche :
-    def draw_zone(self ):
-
-        if self.activate and self.is_selected and not self.remove:
-            for rect in self.active_zone:
-                pygame.draw.rect(self.win, (0, 255, 0), rect, 2)
+    
+    def draw_zone(self,introduction_image ):
+        if introduction_image.i >= unit_selection_player2["choice2"]["number_of_click_max"]: 
+     # Draw grass tiles
+            zone=[]
+            if  self.is_selected and not self.remove:
+                for rect in self.active_zone:
+                    #pygame.draw.rect(self.win, (0, 255, 0), rect, 2)
+                    zone.append(rect)
+            return zone
 
     def move(self):
         self.to_remove()
-        if not self.remove : self.passes_through_trap()
-        """Handle player movement and collision detection."""
+        if not self.remove :
+            self.passes_through_trap()
+        
         if self.is_selected and self.active_zone:
             keys = pygame.key.get_pressed()
             new_x, new_y = self.x, self.y
@@ -157,30 +149,38 @@ class Unit:
                 self.x, self.y = new_x, new_y
             
 
-    def draw(self,health_picture):
-        """Draw the player on the screen."""
-        if self.health_level >0 :
-            if self.right:
-                self.win.blit(self.walk_right[self.walkcount_right], (self.x, self.y))
-            elif self.left:
-                self.win.blit(self.walk_left[self.walkcount_left], (self.x, self.y))
-            elif self.up:
-                self.win.blit(self.walk_up[self.walkcount_up], (self.x, self.y))
-            elif self.down:
-                self.win.blit(self.walk_down[self.walkcount_down], (self.x, self.y))
+    def draw(self,health_picture,introduction_game):
+        
+        if  introduction_game.i>=unit_selection_player2["choice2"]["number_of_click_max"]:   
+            if self.health_level >0 :
+                if self.right:
+                    self.win.blit(self.walk_right[self.walkcount_right], (self.x, self.y))
+                elif self.left:
+                    self.win.blit(self.walk_left[self.walkcount_left], (self.x, self.y))
+                elif self.up:
+                    self.win.blit(self.walk_up[self.walkcount_up], (self.x, self.y))
+                elif self.down:
+                    self.win.blit(self.walk_down[self.walkcount_down], (self.x, self.y))
 
-            else:
-                self.win.blit(self.image_player, (self.x, self.y))
-            if self.is_selected  :
+                else:
+                    self.win.blit(self.walk_down[0], (self.x, self.y))
+                if self.is_selected  :
 
-                pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)
-                if self.health_level== 100 :
-                    self.win.blit(health_picture[0], (self.x, self.y-10))
-                elif self.health_level== 80 :            
-                    self.win.blit(health_picture[1], (self.x, self.y-10))
-                elif self.health_level== 60 :
-                    self.win.blit(health_picture[2], (self.x, self.y-10))
-                elif self.health_level== 40:
-                    self.win.blit(health_picture[3], (self.x, self.y-10))
-                elif self.health_level == 20 :
-                    self.win.blit(health_picture[4], (self.x, self.y-10))
+                    pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)
+                    if self.health_level== 100 :
+                        self.win.blit(health_picture[0], (self.x, self.y-10))
+                    elif self.health_level== 80 :            
+                        self.win.blit(health_picture[1], (self.x, self.y-10))
+                    elif self.health_level== 60 :
+                        self.win.blit(health_picture[2], (self.x, self.y-10))
+                    elif self.health_level== 40:
+                        self.win.blit(health_picture[3], (self.x, self.y-10))
+                    elif self.health_level == 20 :
+                        self.win.blit(health_picture[4], (self.x, self.y-10))
+
+
+# Je dois creeer des units dans ici qui herite de unit pour apres mettres les methodes des power puis les mettre dasn player
+
+
+
+
