@@ -5,10 +5,10 @@ from game_variables import *
 
 
 class unit:
-    def __init__(self,pos, win, wall_rect,matrice_zone , wlak_right, wlak_left, wlak_up , walk_down ):
+    def __init__(self,pos, win, wall,matrice_zone , walk_right, walk_left, walk_up , walk_down ):
         self.x = pos[0]
         self.y = pos[1]
-        self.wall_rect = wall_rect  
+        self.wall_rect = wall  
         self.health = 100  
         
         self.win = win
@@ -19,9 +19,9 @@ class unit:
         self.vel = 30
 
 
-        self.wlak_right = wlak_right
-        self.wlak_up = wlak_up
-        self.wlak_left = wlak_left
+        self.wlak_right = walk_right
+        self.wlak_up = walk_up
+        self.wlak_left = walk_left
         self.wlak_down = walk_down
         
         self.left = False
@@ -140,7 +140,7 @@ class unit:
 
     def draw(self,health_picture,introduction_game):
         
-        if  introduction_game.i>=unit_selection_player2["choice2"]["number_of_click_max"]:   
+        if  introduction_game.i>=introduction_game.last_click:   
             if self.health >0 :
                 if self.right:
                     self.win.blit(self.wlak_right[self.walkcount_right], (self.x, self.y))

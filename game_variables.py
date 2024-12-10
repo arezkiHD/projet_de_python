@@ -59,8 +59,7 @@ number_of_player = {  # here i stock information to chose on the menu to play 2 
  },
 
     "choice2" :{ 
-         
-    "name" : "3v3" ,
+    "name" : "3v3" ,   
     "pos_x" : 400, 
     "pos_y" : 100 ,
     "picture" : image_player,
@@ -86,12 +85,11 @@ unit_selection_player1 = {  # here i stock information to chose on the menu to p
         "width_before" : 90 ,
         "height_after" : 180 ,
         "width_after" : 180 ,
-        "number_of_click_min" :2 ,
         "matrice": matrice_Clasian ,
         "walk_right" : walk_right ,
-"walk_left" : walk_left,
-"walk_up" : walk_up,
-"walk_down" : walk_down ,
+        "walk_left" : walk_left,
+        "walk_up" : walk_up,
+        "walk_down" : walk_down ,
         
 
  
@@ -107,7 +105,7 @@ unit_selection_player1 = {  # here i stock information to chose on the menu to p
     "width_before" : 90 ,
     "height_after" : 180,
     "width_after" :  180 ,
-    "number_of_click_max" : 5,
+   
     "matrice ":matrice_Spectre,
     "walk_right" : walk_right ,
 "walk_left" : walk_left,
@@ -157,6 +155,15 @@ unit_selection_player1 = {  # here i stock information to chose on the menu to p
 
   
   },  
+
+  "number of click" :{
+      
+     "number_of_click_min_for_3v3" : 2,
+     "number_of_click_max_for_3v3" : 5,
+     "number_of_click_min_for_2v2" : 2,
+     "number_of_click_max_for_2v2" : 4,
+
+  },
 }
 
 
@@ -222,9 +229,9 @@ unit_selection_player2 = {  # here i stock information to chose on the menu to p
   }, 
 
 
-    "choice4" :{ 
+"choice4" :{ 
      
- "name" : "unit_Berzerk" ,    
+"name" : "unit_Berzerk" ,    
 "pos_x" : 660 , 
 "pos_y" : 500 ,
 "picture" : image_player,
@@ -242,6 +249,15 @@ unit_selection_player2 = {  # here i stock information to chose on the menu to p
   
   }, 
 
+   "number of click" :{
+     
+    "number_of_click_min_for_3v3" : 5,
+    "number_of_click_max_for_3v3" : 8,
+    "number_of_click_min_for_2v2" : 4,
+    "number_of_click_max_for_2v2" : 6,
+
+ },
+
 
 
 }
@@ -250,13 +266,4 @@ unit_selection_player2 = {  # here i stock information to chose on the menu to p
 
 
 
-
-
 # Matrices pour la zone de deplacement
-
-
-
-  
-
-random.shuffle(player1_pos)
-print(player1_pos[0])

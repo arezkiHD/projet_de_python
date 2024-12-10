@@ -51,35 +51,53 @@ texte1 = afiche_texte("hello",1000,30,(255,255,255),win)
 introduction_Game = introduction_game(intro_game_picture,win)
  #def __init__(self,units_positions,units_choice  , image_player,wall):
 
-player1=Player(player1_pos,["unit_Spectre","unit_Clasian", "unit_Spectre","unit_Clasian"],False,intro_game_picture,wal1)
-player2=Player(player2_pos,["unit_Spectre","unit_Clasian" , "unit_Spectre","unit_Clasian"],True ,intro_game_picture,wal1)
+player1=Player(player1_pos,False,intro_game_picture,wal1)
+player2=Player(player2_pos,True ,intro_game_picture,wal1)
 
  
 
 run = True
+mode = True 
 while run:
     pygame.time.delay(60)
+     # Clear the screen
+    win.fill((105, 105, 105))
+
+
+    
+    
+    
+    
+    
     
     # Handle events
-    EVENT = Event_manipulation(pygame.event.get(), run, player1.units,player2.units, [pygame.K_a, pygame.K_z, pygame.K_e, pygame.K_r ])
+    EVENT = Event_manipulation(pygame.event.get(), run, [pygame.K_a, pygame.K_z, pygame.K_e, pygame.K_r ,    ])
     EVENT.events_handler(player1,player2)
     run = EVENT.run
     
-    # Clear the screen
-    win.fill((105, 105, 105))
-    
-    # Handle introduction phase
-    introduction_Game.affiche_introduction(pygame.mouse.get_pressed()) # to affiche the first picture of the introduction game 
-    
-    introduction_Game.chosing( number_of_player ,pygame.mouse.get_pos(),pygame.mouse.get_pressed() ) # to select on the menu if 2v2 or 3v3
-    introduction_Game.chosing(unit_selection_player1 ,pygame.mouse.get_pos(),pygame.mouse.get_pressed())   # to select units 
-    introduction_Game.chosing(unit_selection_player2 ,pygame.mouse.get_pos(),pygame.mouse.get_pressed())   # to select units 
+    introduction_Game.affiche_introduction_click_start_start(pygame.mouse.get_pressed()) # to affiche the first picture of the introduction game 
+    #  def chosing_2v2_or_3v3(self,corsur_position,press_mouse , number_of_player= number_of_player   ) :
+    introduction_Game.chosing_2v2_or_3v3( pygame.mouse.get_pos(),pygame.mouse.get_pressed() ) # to select on the menu if 2v2 or 3v3
+    introduction_Game.chosing_units_for_player1(pygame.mouse.get_pos(),pygame.mouse.get_pressed() ,player1) 
+    introduction_Game.chosing_units_for_player2(pygame.mouse.get_pos(),pygame.mouse.get_pressed() ,player2 ) 
 
-    wal1.wall_drawing(introduction_Game, player2.units +player1.units)
+    if introduction_Game.i >=introduction_Game.last_click and mode :
+        player1.initialize_units()
+        player2.initialize_units()
+        mode = False 
+ 
+ 
 
+   
+   
+
+   
+
+    wal1.wall_drawing(introduction_Game, player2.units + player1.units)
+##
     player2.play(introduction_Game)
-
-    player1.play(introduction_Game)
+##
+    player1.play(introduction_Game) 
     
     
     
@@ -93,4 +111,4 @@ while run:
 pygame.quit()
 
 
-print("=================>>", player1.play_times)
+print(player2.units_choice)
