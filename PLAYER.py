@@ -28,40 +28,8 @@ class Player(unit):
 
         self.unit_positions = units_positions   #lest's assume that we get 3 diff position 
         
-
-        # Créer les unités avec leurs positions initiales et propriétés
-    # Classian :    
-    #    self.unit_Clasian = unit(
-    #        self.unit_positions[0], win, self.wall, 
-    #        matrice_Clasian , walk_right, walk_left, walk_up , walk_down     # here i will add pictures for each unit !
-    #       
-    #    )
-#
-    ## Rapidzio :
-    #    self.unit_Rapidzio = unit(
-    #        self.unit_positions[1], win,self.wall, 
-    #        matrice_Rapidzio , walk_right, walk_left, walk_up , walk_down
-    #            )
-#
-    ## Berzerk :
-#
-    #    self.unit_Berzerk = unit(
-    #        self.unit_positions[2], win, self.wall, 
-    #        matrice_Berzerk,  walk_right, walk_left, walk_up , walk_down
-    #        )
-#
-    ## Spectre :
-#
-    #    self.unit_Spectre = unit(
-    #        self.unit_positions[3], win,self.wall, 
-    #        matrice_Spectre,  walk_right, walk_left, walk_up , walk_down
-    #        )
-    #
-    #    
-    #    self.units_initialized = False
-
         self.to_add = True
-    def initialize_units(self):
+    def initialize_units(self,UNITS_INFORMATION):
         
         unit_class_mapping = {
             "unit_Clasian": matrice_Clasian,
@@ -70,22 +38,22 @@ class Player(unit):
             "unit_Spectre": matrice_Spectre
         }
 
-        for idx, unit_name in enumerate(self.units_choice):
+        for idx, unit_name in enumerate(UNITS_INFORMATION.keys()):
             print("yes babyunit_name")
-            if unit_name in unit_class_mapping:
+            if unit_name in self.units_choice:
                 new_unit = unit(
                     pos=self.unit_positions[idx],
                     win=win,
                     wall=self.wall,
-                   matrice_zone=unit_class_mapping[unit_name],
-                    walk_right=walk_right,
-                    walk_left=walk_left,
-                    walk_up=walk_up,
-                    walk_down=walk_down
+                    matrice_zone=UNITS_INFORMATION[unit_name]["matrice"],
+                    walk_right=UNITS_INFORMATION[unit_name]["walk_right"],
+                    walk_left=UNITS_INFORMATION[unit_name]["walk_left"],
+                    walk_up=UNITS_INFORMATION[unit_name]["walk_up"],
+                    walk_down=UNITS_INFORMATION[unit_name]["walk_down"],
                 )
                 if self.to_add :
                     self.units.append(new_unit)
-                    print("okokok",idx)
+                    
 
         
         
@@ -94,21 +62,22 @@ class Player(unit):
         
 
 
-    def play(self , introduction_Game):
+    def play(self,player2 , introduction_Game):
+
        
 
         
  # Draw and update all units
-
+    
         for Unit in self.units:
-            Unit.draw(health_picture, introduction_Game)
-            if Unit.is_selected :
-                Unit.draw_zone(introduction_Game)
-                Unit.move()
-                
-                
-                if Unit.remove:
-                    self.units.remove(unit)
+            if Unit.affiche :
+                Unit.draw(health_picture, introduction_Game)
+                if Unit.is_selected :
+                    Unit.draw_zone(introduction_Game)
+                    Unit.move()
+                    Unit.basic_attack(self,player2.units)
+                    if Unit.remove:
+                        self.units.remove(unit)
                 
         
         

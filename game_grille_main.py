@@ -71,7 +71,7 @@ while run:
     
     
     # Handle events
-    EVENT = Event_manipulation(pygame.event.get(), run, [pygame.K_a, pygame.K_z, pygame.K_e, pygame.K_r ,    ])
+    EVENT = Event_manipulation(pygame.event.get(), run, [pygame.K_a, pygame.K_z, pygame.K_e],[ pygame.K_q ,pygame.K_s ,pygame.K_d   ])
     EVENT.events_handler(player1,player2)
     run = EVENT.run
     
@@ -82,8 +82,8 @@ while run:
     introduction_Game.chosing_units_for_player2(pygame.mouse.get_pos(),pygame.mouse.get_pressed() ,player2 ) 
 
     if introduction_Game.i >=introduction_Game.last_click and mode :
-        player1.initialize_units()
-        player2.initialize_units()
+        player1.initialize_units(UNITS_INFORMATION)
+        player2.initialize_units(UNITS_INFORMATION)
         mode = False 
  
  
@@ -95,9 +95,9 @@ while run:
 
     wal1.wall_drawing(introduction_Game, player2.units + player1.units)
 ##
-    player2.play(introduction_Game)
+    player2.play(player1,introduction_Game)
 ##
-    player1.play(introduction_Game) 
+    player1.play(player2,introduction_Game) 
     
     
     
@@ -111,4 +111,3 @@ while run:
 pygame.quit()
 
 
-print(player2.units_choice)

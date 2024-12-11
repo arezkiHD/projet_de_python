@@ -1,65 +1,60 @@
 from game_variables import *
 
+class Event_manipulation:
+    def __init__(self, event, run, unit_key_selection1, unit_key_selection2):
+        self.event = event
+        self.run = run
+        self.unit_key_selection1 = unit_key_selection1
+        self.unit_key_selection2 = unit_key_selection2
 
-
-
-class Event_manipulation():
-    def __init__(self, event,run, unit_key_selection ):
-        self.event = event 
-        self.run= run 
-        self.unit_key_selection= unit_key_selection
-       
-        
-        
-
-    def events_handler(self,player1,player2):
-        for event in self.event :
+    def events_handler(self, player1, player2):
+        for event in self.event:
             if event.type == pygame.QUIT:
                 self.run = False
 
-            if player1.play_or_not :
-                player2.play_r_not =False 
-                for i,unit in enumerate(player1.units) :
-                    # here to manipulate the key sected for each unit 
+            # Handle Player 1's turn
+            if player1.play_or_not:
+                # Ensure Player 2's units are hidden and Player 1's units are shown
+                self.set_unit_affiche(player1, player2)
+                self.handle_player_turn(player1, player2, self.unit_key_selection1, event)
 
-                    if event.type == pygame.KEYDOWN and event.key == self.unit_key_selection[i]:
-                        player1.play_times += int(event.type == pygame.KEYDOWN and event.key == self.unit_key_selection[i])                  # here all other units are false 
-                        for all_other_units in player1.units :
-                            if all_other_units == unit :
-                                continue 
-                            all_other_units.is_selected = False
+            # Handle Player 2's turn
+            if player2.play_or_not:
+                # Ensure Player 1's units are hidden and Player 2's units are shown
+                self.set_unit_affiche(player2, player1)
+                self.handle_player_turn(player2, player1, self.unit_key_selection2, event)
 
-                        unit.is_selected = not unit.is_selected                  # the unit that we selected is true 
-                        # here to get only the zone in the previous x and y where we pressed the key 
-                        unit.active_zone = unit.calculate_zone(unit.x, unit.y)
-            if player1.play_times >= 2*len(player1.units_choice) :
-                player1.play_or_not = False 
-                player2.play_or_not = True
-                print("la nrmnm it is o !!!!")
-                player1.play_times =0
+    def handle_player_turn(self, current_player, other_player, unit_key_selection, event):
+        # Process unit selection for the current player's turn
+        for i, unit in enumerate(current_player.units):
+            if event.type == pygame.KEYDOWN and event.key == unit_key_selection[i]:
+                # Deselect all current player's units except the chosen one
+                for other_unit in current_player.units:
+                    if other_unit != unit:
+                        other_unit.is_selected = False
 
+                # Select or deselect the chosen unit
+                unit.is_selected = not unit.is_selected
 
-            if player2.play_or_not :
-                player1.play_r_not =False 
-                for i,unit in enumerate(player2.units) :
-                    # here to manipulate the key sected for each unit 
-                    if event.type == pygame.KEYDOWN and event.key == self.unit_key_selection[i]:
-                        player2.play_times += int(event.type == pygame.KEYDOWN and event.key == self.unit_key_selection[i])        
-                        for all_other_units in player2.units :
-                            if all_other_units == unit :
-                                continue 
-                            all_other_units.is_selected = False
-                        unit.is_selected = not unit.is_selected                  # the unit that we selected is true 
-                        # here to get only the zone in the previous x and y where we pressed the key 
-                        unit.active_zone = unit.calculate_zone(unit.x, unit.y)
-            if player2.play_times >= 2*len(player2.units_choice) :
-                player2.play_or_not = False 
-                player1.play_or_not = True
-                player2.play_times =0
-            
-            
-            
-                    
-                
+                # Calculate the active zone if the unit is selected
+                if unit.is_selected:
+                    unit.active_zone = unit.calculate_zone(unit.x, unit.y)
 
+                # Increment the player's action count
+                current_player.play_times += 1
 
+        # Check if the player's turn is over
+        if current_player.play_times >= 2 * len(current_player.units_choice):
+            current_player.play_or_not = False
+            other_player.play_or_not = True
+            current_player.play_times = 0
+            print(f"{current_player} finished their turn, switching turns.")
+
+    def set_unit_affiche(self, active_player, inactive_player):
+        # Show all active player's units
+        for unit in active_player.units:
+            unit.affiche = True
+
+        # Hide all inactive player's units
+        for unit in inactive_player.units:
+            unit.affiche = False

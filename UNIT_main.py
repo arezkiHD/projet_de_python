@@ -30,6 +30,7 @@ class unit:
         self.down = False
         self.is_selected = False
         self.remove = False
+        self.affiche = True 
 
         self.walkcount_left = 0
         self.walkcount_right = 0
@@ -136,6 +137,22 @@ class unit:
             # Allow movement only within the active zone
             if any(new_rect.colliderect(zone) for zone in self.active_zone) :
                 self.x, self.y = new_x, new_y
+
+    def basic_attack(self,player_me,enemy_units ) :
+        if player_me.play_or_not :
+            for en_unit in enemy_units :
+                if any(en_unit.rect.colliderect(zone) for zone in self.active_zone) :
+                    en_unit.health -= 20
+                    en_unit.to_remove()  # Check if this enemy should be removed
+
+
+    
+                
+            
+
+
+
+
             
 
     def draw(self,health_picture,introduction_game):
