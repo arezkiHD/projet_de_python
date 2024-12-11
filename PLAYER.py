@@ -30,19 +30,14 @@ class Player(unit):
         
         self.to_add = True
     def initialize_units(self,UNITS_INFORMATION):
-        
-        unit_class_mapping = {
-            "unit_Clasian": matrice_Clasian,
-            "unit_Rapidzio": matrice_Rapidzio,
-            "unit_Berzerk": matrice_Berzerk,
-            "unit_Spectre": matrice_Spectre
-        }
-
+                            
+                     
         for idx, unit_name in enumerate(UNITS_INFORMATION.keys()):
             print("yes babyunit_name")
             if unit_name in self.units_choice:
                 new_unit = unit(
                     pos=self.unit_positions[idx],
+                    pos_start=self.unit_positions[idx],
                     win=win,
                     wall=self.wall,
                     matrice_zone=UNITS_INFORMATION[unit_name]["matrice"],
@@ -62,22 +57,19 @@ class Player(unit):
         
 
 
-    def play(self,player2 , introduction_Game):
-
-       
-
-        
- # Draw and update all units
+    def play(self,player2 , introduction_Game,color ):
+            
+         # Draw and update all units
     
         for Unit in self.units:
             if Unit.affiche :
-                Unit.draw(health_picture, introduction_Game)
+                Unit.draw(health_picture, introduction_Game, color  )
                 if Unit.is_selected :
                     Unit.draw_zone(introduction_Game)
                     Unit.move()
                     Unit.basic_attack(self,player2.units)
                     if Unit.remove:
-                        self.units.remove(unit)
+                        self.units.remove(Unit)
                 
         
         

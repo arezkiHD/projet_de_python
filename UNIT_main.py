@@ -5,9 +5,11 @@ from game_variables import *
 
 
 class unit:
-    def __init__(self,pos, win, wall,matrice_zone , walk_right, walk_left, walk_up , walk_down ):
+    def __init__(self,pos,pos_start, win, wall,matrice_zone , walk_right, walk_left, walk_up , walk_down ):
         self.x = pos[0]
         self.y = pos[1]
+        self.pos_start = pos_start
+        
         self.wall_rect = wall  
         self.health = 100  
         
@@ -31,6 +33,7 @@ class unit:
         self.is_selected = False
         self.remove = False
         self.affiche = True 
+        self.get_attacked = False 
 
         self.walkcount_left = 0
         self.walkcount_right = 0
@@ -94,7 +97,7 @@ class unit:
         if self.is_selected and self.active_zone:
             keys = pygame.key.get_pressed()
             new_x, new_y = self.x, self.y
-            if keys[pygame.K_LEFT]:
+            if keys[pygame.K_LEFT] and self.x > 0 :
                 new_x -= self.vel
                 self.left = True
                 self.right = False
@@ -103,7 +106,7 @@ class unit:
                 self.walkcount_left += 1
                 if self.walkcount_left >= len(self.wlak_left):
                     self.walkcount_left = 0
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_RIGHT] and self. x < len(facile_maps[:][0])* tile_size + tile_size:
                 new_x += self.vel
                 self.left = False
                 self.right = True
@@ -112,7 +115,7 @@ class unit:
                 self.walkcount_right += 1
                 if self.walkcount_right >= len(self.wlak_right):
                     self.walkcount_right = 0
-            if keys[pygame.K_UP]:
+            if keys[pygame.K_UP] and self.y > 0:
                 new_y -= self.vel
                 self.left = False
                 self.right = False
@@ -121,7 +124,7 @@ class unit:
                 self.walkcount_up += 1
                 if self.walkcount_up >= len(self.wlak_up):
                     self.walkcount_up = 0
-            if keys[pygame.K_DOWN]:
+            if keys[pygame.K_DOWN] and self.y < len(facile_maps[0][:])* tile_size - tile_size:
                 new_y += self.vel
                 
                 self.down = True
@@ -137,28 +140,43 @@ class unit:
             # Allow movement only within the active zone
             if any(new_rect.colliderect(zone) for zone in self.active_zone) :
                 self.x, self.y = new_x, new_y
-
-    def basic_attack(self,player_me,enemy_units ) :
-        if player_me.play_or_not :
-            for en_unit in enemy_units :
-                if any(en_unit.rect.colliderect(zone) for zone in self.active_zone) :
-                    en_unit.health -= 20
-                    en_unit.to_remove()  # Check if this enemy should be removed
-
-
+  
+    def basic_attack(self, player_me, enemy_units):
+        # Only attack if it's the player's turn
+        if not player_me.play_or_not:
+            return
     
-                
-            
+        # Check each enemy unit
+        for en_unit in enemy_units:
+            # Ensure rect is up-to-date with the current position
+            en_unit.rect.topleft = (en_unit.x, en_unit.y)
+    
+            # Check if enemy unit is within any of the active zone tiles
+            if any(en_unit.rect.colliderect(zone) for zone in self.active_zone):
+                # Enemy is in range: Attack!
+                en_unit.health -= 20
+                en_unit.get_attacked = True  # Make the enemy unit visible
+                en_unit.to_remove()     # Check if the enemy should be removed  
+                   
+
+                # If you want to relocate the enemy only if it's still alive:
+                if en_unit.health > 0:
+                    en_unit.x, en_unit.y = en_unit.pos_start
+                    en_unit.rect.topleft = (en_unit.x, en_unit.y)
+    
+                # Stop after attacking the first enemy in range
+                break
 
 
 
-
-            
-
-    def draw(self,health_picture,introduction_game):
+                                            
+    def draw(self,health_picture,introduction_game, color  ):
         
         if  introduction_game.i>=introduction_game.last_click:   
             if self.health >0 :
+                pygame.draw.rect(self.win ,color, (self.x,self.y ,  2,tile_size))
+                # Draw a filled red circle with radius 50 at position (200, 150)
+                #pygame.draw.circle(self.win, color , (self.x+tile_size/2, self.y+tile_size/2), tile_size/2 )
                 if self.right:
                     self.win.blit(self.wlak_right[self.walkcount_right], (self.x, self.y))
                 elif self.left:

@@ -16,34 +16,15 @@ pygame.init()
 # Screen dimensions
 
 pygame.display.set_caption("My Game")
-#map_matrix = MapLoader("facile").load_map()
-map_matrix=new_map
-
-
+map_matrix = MapLoader("facile").load_map()
+#map_matrix=new_map
 
 # Player settings
 
 font = pygame.font.SysFont("Arial", 50)
-
 #game_music = pygame.mixer.music.load("Arcade fast flow1.ogg")
 #pygame.mixer.music.play(-1)
-
-
-
-
-
-
-
-
-        
-
-
-        
-            
-
-
-
-
+                            
                 
 # Initialize wall and player objects
 wal1 = Wall(grass_image, map_matrix, tile_size, win, tile_size, tile_size)
@@ -65,11 +46,6 @@ while run:
 
 
     
-    
-    
-    
-    
-    
     # Handle events
     EVENT = Event_manipulation(pygame.event.get(), run, [pygame.K_a, pygame.K_z, pygame.K_e],[ pygame.K_q ,pygame.K_s ,pygame.K_d   ])
     EVENT.events_handler(player1,player2)
@@ -84,28 +60,10 @@ while run:
     if introduction_Game.i >=introduction_Game.last_click and mode :
         player1.initialize_units(UNITS_INFORMATION)
         player2.initialize_units(UNITS_INFORMATION)
-        mode = False 
- 
- 
-
-   
-   
-
-   
-
+        mode = False            
     wal1.wall_drawing(introduction_Game, player2.units + player1.units)
-##
-    player2.play(player1,introduction_Game)
-##
-    player1.play(player2,introduction_Game) 
-    
-    
-    
-    
-
-
-
-    # Update display
+    player2.play(player1,introduction_Game,(255,0,0))
+    player1.play(player2,introduction_Game,(0,255,0))             # Update display
     pygame.display.update()
 
 pygame.quit()

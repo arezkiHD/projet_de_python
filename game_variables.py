@@ -64,12 +64,6 @@ walk_down_Berzerk = [pygame.image.load(os.path.join("pictures\direction_chara", 
 health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health{i}.png")) for i in range(1,6) ]
 intro_game_picture=pygame.image.load("pictures\game_manipulation\into_pic.jpg")
 
-
-
-
-
-
-
 number_of_player = {  # here i stock information to chose on the menu to play 2 vs 2 or 3 vs 3 
     "choice1" : {
         "name" : "2v2" ,
