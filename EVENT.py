@@ -41,7 +41,7 @@ class Event_manipulation:
                 # Calculate the active zone if the unit is selected
                 if unit.is_selected:
                     unit.active_zone = unit.calculate_zone(unit.x, unit.y)
-                    pygame.draw.rect(win ,(255, 0, 0), (unit.x,unit.y , 30 , 2)) # when we seletc the the unit !!!
+                    #pygame.draw.rect(win ,(255, 0, 0), (unit.x,unit.y , 30 , 2)) # when we seletc the the unit !!!
 
                 # Increment the player's action count
                 current_player.play_times += 1

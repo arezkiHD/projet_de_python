@@ -15,8 +15,8 @@ class MapLoader:
             matrix_map = random.choice(facile_maps)
         elif self.level == "moyen":
             matrix_map = random.choice(moyen_maps)
-        elif self.level == "difficile":
-            matrix_map = random.choice(difficile_maps)
+        #elif self.level == "difficile":
+            #matrix_map = random.choice(difficile_maps)
         else:
             raise ValueError("Niveau invalide. Choisissez parmi 'facile', 'moyen', ou 'difficile'.")
 

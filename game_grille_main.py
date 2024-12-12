@@ -23,7 +23,8 @@ map_matrix = MapLoader("facile").load_map()
 
 font = pygame.font.SysFont("Arial", 50)
 #game_music = pygame.mixer.music.load("Arcade fast flow1.ogg")
-#pygame.mixer.music.play(-1)
+
+#pygame.mixer.music.play()
                             
                 
 # Initialize wall and player objects
@@ -42,7 +43,7 @@ mode = True
 while run:
     pygame.time.delay(60)
      # Clear the screen
-    win.fill((105, 105, 105))
+    win.fill((0,0,0))
 
 
     

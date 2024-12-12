@@ -11,6 +11,7 @@ class introduction_game():
         self.player_2v2_or_3v3 = None   # to stock if 2v2 or 3v3
         self.mouse_down = False
         self.last_click = 10000
+        self.play_music =False 
     
     
     
@@ -42,6 +43,9 @@ class introduction_game():
                     hover_x = choice_data["pos_x"] - (choice_data["width_after"] - choice_data["width_before"]) // 2
                     hover_y = choice_data["pos_y"] - (choice_data["height_after"] - choice_data["height_before"]) // 2
                     self.win.blit(scaled_picture, (hover_x, hover_y))
+                    
+                    
+
                     # Check for a click to select the option
                     if press_mouse[2]:                         
 
@@ -130,7 +134,7 @@ class introduction_game():
 
     def chosing_units_for_player2(self   ,corsur_position,press_mouse,player, unit_selection_player2=unit_selection_player2 ) :
         cursor_x , cursor_y = corsur_position
-        
+        self.menu_music()
         if self.player_2v2_or_3v3 is None : 
             return 
         
@@ -158,8 +162,9 @@ class introduction_game():
                     hover_x = choice_data["pos_x"] - (choice_data["width_after"] - choice_data["width_before"]) // 2
                     hover_y = choice_data["pos_y"] - (choice_data["height_after"] - choice_data["height_before"]) // 2
                     self.win.blit(scaled_picture, (hover_x, hover_y))
-                    # Check for a click to select the option
-                    if press_mouse[2]:                         
+                    if press_mouse[2]:   
+                        pygame.mixer.music.load("Menu Selection Click.wav")
+                        pygame.mixer.music.play()                       
                          
                         if not self.mouse_down:
                             pygame.draw.rect(self.win, (255, 0, 0), (hover_x, hover_y,choice_data["width_after"], choice_data["height_after"]), 2)
@@ -179,5 +184,11 @@ class introduction_game():
             
             if not press_mouse[2]:
                 self.mouse_down = False
-                                               
+
+    def menu_music(self , music="Menu Selection Click.wav" ) :
+
+        if self.play_music :
+            pygame.mixer.music.load(music)
+            pygame.mixer.music.play() 
+            
                                                                                                                                                                                                                 

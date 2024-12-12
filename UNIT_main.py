@@ -106,7 +106,7 @@ class unit:
                 self.walkcount_left += 1
                 if self.walkcount_left >= len(self.wlak_left):
                     self.walkcount_left = 0
-            if keys[pygame.K_RIGHT] and self. x < len(facile_maps[:][0])* tile_size + tile_size:
+            if keys[pygame.K_RIGHT] and self. x < len(facile_maps[0][0])*tile_size - tile_size :
                 new_x += self.vel
                 self.left = False
                 self.right = True
@@ -124,7 +124,7 @@ class unit:
                 self.walkcount_up += 1
                 if self.walkcount_up >= len(self.wlak_up):
                     self.walkcount_up = 0
-            if keys[pygame.K_DOWN] and self.y < len(facile_maps[0][:])* tile_size - tile_size:
+            if keys[pygame.K_DOWN] and self.y < len(facile_maps[0])* tile_size - tile_size:
                 new_y += self.vel
                 
                 self.down = True
@@ -174,10 +174,11 @@ class unit:
         
         if  introduction_game.i>=introduction_game.last_click:   
             if self.health >0 :
-                pygame.draw.rect(self.win ,color, (self.x,self.y ,  2,tile_size))
+                #pygame.draw.rect(self.win ,color, (self.x,self.y ,  2,tile_size))
                 # Draw a filled red circle with radius 50 at position (200, 150)
                 #pygame.draw.circle(self.win, color , (self.x+tile_size/2, self.y+tile_size/2), tile_size/2 )
                 if self.right:
+                    
                     self.win.blit(self.wlak_right[self.walkcount_right], (self.x, self.y))
                 elif self.left:
                     self.win.blit(self.wlak_left[self.walkcount_left], (self.x, self.y))
@@ -190,14 +191,19 @@ class unit:
                     self.win.blit(self.wlak_down[0], (self.x, self.y))
                 if self.is_selected  :
 
-                    pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)
+                    #pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)
                     if self.health== 100 :
-                        self.win.blit(health_picture[0], (self.x, self.y-10))
+                        #self.win.blit(health_picture[0], (self.x, self.y-10))
+                        pygame.draw.rect(self.win ,color, (self.x,self.y-5 ,  tile_size*1,5))
                     elif self.health== 80 :            
-                        self.win.blit(health_picture[1], (self.x, self.y-10))
+                        #self.win.blit(health_picture[1], (self.x, self.y-10))
+                        pygame.draw.rect(self.win ,color, (self.x,self.y-5,  tile_size*0.8,5))
                     elif self.health== 60 :
-                        self.win.blit(health_picture[2], (self.x, self.y-10))
+                        #self.win.blit(health_picture[2], (self.x, self.y-10))
+                        pygame.draw.rect(self.win ,color, (self.x,self.y-5,  tile_size*0.6,5))
                     elif self.health== 40:
-                        self.win.blit(health_picture[3], (self.x, self.y-10))
+                        #self.win.blit(health_picture[3], (self.x, self.y-10))
+                        pygame.draw.rect(self.win ,color, (self.x,self.y-5 ,  tile_size*0.4,5))
                     elif self.health == 20 :
-                        self.win.blit(health_picture[4], (self.x, self.y-10))
+                        #self.win.blit(health_picture[4], (self.x, self.y-10))
+                        pygame.draw.rect(self.win ,color, (self.x,self.y-5 ,  tile_size*0.2,5))
