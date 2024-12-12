@@ -5,12 +5,13 @@ from game_variables import *
 
 
 class Unit_V2:
-    def __init__(self, pos, win, wall_rect, matrice_zone, walk_right, walk_left, walk_up, walk_down, max_health, base_dammage, events):
+    def __init__(self, pos, pos_start, wall_rect, matrice_zone, walk_right, walk_left, walk_up, walk_down, max_health, base_dammage, win = win, events = None):
         self.x = pos[0]
         self.y = pos[1]
+        self.pos_start = pos_start
         self.wall_rect = wall_rect
-        self.health_level = max_health
         self.max_health = max_health
+        self.health_level = max_health
         self.win = win
         self.matrice = matrice_zone
         self.base_dammage = base_dammage
@@ -28,6 +29,8 @@ class Unit_V2:
         self.remove = False
         self.direction = None
         self.power_enable = False
+        self.affiche = True 
+        self.get_attacked = False
 
         self.event = events
 
@@ -65,6 +68,31 @@ class Unit_V2:
             self.power_enable = True
         print("Vous pouver utiliser votre pouvoir.")
 
+    def basic_attack(self, player_me, enemy_units):
+        # Only attack if it's the player's turn
+        if not player_me.play_or_not:
+            return
+        
+        # Check each enemy unit
+        for en_unit in enemy_units:
+            # Ensure rect is up-to-date with the current position
+            en_unit.rect.topleft = (en_unit.x, en_unit.y)
+    
+            # Check if enemy unit is within any of the active zone tiles
+            if any(en_unit.rect.colliderect(zone) for zone in self.active_zone):
+                # Enemy is in range: Attack!
+                en_unit.health_level -= self.base_dammage
+                en_unit.get_attacked = True  # Make the enemy unit visible
+                en_unit.to_remove()     # Check if the enemy should be removed  
+                   
+
+                # If you want to relocate the enemy only if it's still alive:
+                if en_unit.health > 0:
+                    en_unit.x, en_unit.y = en_unit.pos_start
+                    en_unit.rect.topleft = (en_unit.x, en_unit.y)
+    
+                # Stop after attacking the first enemy in range
+                break
 
     def calculate_zone(self):
         """Calculate movable zone based on current position and matrice."""
@@ -120,16 +148,19 @@ class Unit_V2:
             new_x, new_y = self.x, self.y
             self.direction = None
 
-            if keys[pygame.K_LEFT]:
+            if keys[pygame.K_LEFT] and self.x > 0:
                 new_x -= self.vel
                 self.direction = "left"
-            elif keys[pygame.K_RIGHT]:
+
+            elif keys[pygame.K_RIGHT] and self. x < len(facile_maps[:][0])* tile_size + tile_size:
                 new_x += self.vel
                 self.direction = "right"
-            elif keys[pygame.K_UP]:
+
+            elif keys[pygame.K_UP] and self.y > 0:
                 new_y -= self.vel
                 self.direction = "up"
-            elif keys[pygame.K_DOWN]:
+
+            elif keys[pygame.K_DOWN] and self.y < len(facile_maps[0][:])* tile_size - tile_size:
                 new_y += self.vel
                 self.direction = "down"
 
@@ -138,7 +169,8 @@ class Unit_V2:
                 if any(new_rect.colliderect(zone) for zone in self.active_zone):
                     self.x, self.y = new_x, new_y
 
-    def draw(self, health_picture):
+    # Dessin health bar
+    def draw(self, health_picture, introduction_game, color):
         """Draw unit and health bar."""
         if not self.remove:
             # Draw the current animation frame
@@ -156,11 +188,20 @@ class Unit_V2:
             if self.is_selected:
                 pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)
 
+    # Dessin zone de mouvement
+    def draw_zone(self,introduction_image ):
+        if introduction_image.i >= unit_selection_player2["choice2"]["number_of_click_max"]: 
+     # Draw grass tiles
+            zone=[]
+            if  self.is_selected and not self.remove:
+                for rect in self.active_zone:
+                    #pygame.draw.rect(self.win, (0, 255, 0), rect, 2)
+                    zone.append(rect)
+            return zone
 
 ## Classes des Joueurs :
 """ 
 -- UNITS :
-
 - Clasian  : Zone de deplacement moyenne,                            degats moyens 25pnts/turn , santé moyenne 100 pnts, SP : Heal Team   (raises teams health 25% )
 - Rapidzio : Zone de deplacement Large  ,                            degats Faible 15pnts/turn , santé Faible  75  pnts, SP : Long shot   (One case Hit, Big Dammage, no distance limit)
 - Berzerk  : Zone de deplacement Faibe  ,                            degats Eleve  40pnts/turn , santé Elevée  150 pnts, SP : Mass attack (small zone 4x4, average dammage, no distance limit)
@@ -169,17 +210,21 @@ class Unit_V2:
 
 class Classian(Unit_V2) :
 
-    # Dans player : pos = self.unit_positions[0], win = win, wall_rect = self.wall
-
-    def __init__(self, pos, win, wall_rect, walk_right = walk_right, walk_left = walk_left, walk_up = walk_up, walk_down = walk_down, max_health = 100, base_dammage = 25, matrice_zone = matrice_Clasian):
+    def __init__(self, pos, pos_start, wall_rect, win = win, walk_right = walk_right_Clasian, walk_left = walk_left_Clasian, walk_up = walk_up_Clasian, walk_down = walk_down_Clasian, max_health = 100, base_dammage = 25, matrice_zone = matrice_Clasian):
+        if max_health is None or max_health <= 0:
+            raise ValueError(f"Invalid max_health value: {max_health}")
         # Appelle le constructeur de la classe parente Unit
-        super().__init__(pos, win, wall_rect, matrice_zone, walk_right, walk_left, walk_up, walk_down, max_health, base_dammage, events)
+        super().__init__(pos, pos_start, wall_rect, matrice_zone, walk_right, walk_left, walk_up, walk_down, max_health, base_dammage, win = win, events = None)
         
-    def heal_team(self, player, health_cost=10):
+    def heal_team(self, player, events, health_cost=10):
         """
         Soigne toutes les unités alliées d'un certain pourcentage de leur santé maximale,
         sauf le Clasian lui-même. """
-        if self.power_enable == True :
+        keys = pygame.key.get_pressed()
+
+        # Activation du pouvoir avec la touche "P"
+        if self.power_enable == True and keys[pygame.K_p]:
+
             if self.health_level <= health_cost:
                 print("Not enough health to heal the team!")
                 return
@@ -201,13 +246,14 @@ class Classian(Unit_V2) :
 
 class Rapidzio(Unit_V2) :
 
-    # Dans player : pos = self.unit_positions[0], win = win, wall_rect = self.wall
-
-    def __init__(self, pos, win, wall_rect, walk_right = walk_right, walk_left = walk_left, walk_up = walk_up, walk_down = walk_down, max_health = 75, base_dammage = 15, matrice_zone = matrice_Rapidzio, enemy_units = None):
+    def __init__(self, pos, pos_start, wall_rect, win = win, walk_right = walk_right_Rapidzio, walk_left = walk_left_Rapidzio, walk_up = walk_up_Rapidzio, walk_down = walk_down_Rapidzio, max_health = 75, base_dammage = 15, matrice_zone = matrice_Rapidzio, enemy_units = None, events = None):
+        if max_health is None or max_health <= 0:
+            raise ValueError(f"Invalid max_health value: {max_health}")        
         # Appelle le constructeur de la classe parente Unit
-        super().__init__(pos, win, wall_rect, matrice_zone, walk_right, walk_left, walk_up, walk_down, max_health, base_dammage)
+        super().__init__(pos, pos_start, wall_rect, matrice_zone, walk_right, walk_left, walk_up, walk_down, max_health, base_dammage, win = win, events = None)
         self.x_attack = 0
         self.y_attack = 0
+        self.events = events
 
 
     # Long shot   (One case Hit, Big Dammage, no distance limit)
@@ -215,7 +261,7 @@ class Rapidzio(Unit_V2) :
                 
         # Initialisation des variables pour le ciblage
         if not hasattr(self, "target_cursor"):  # Ajouter un curseur si non défini
-            self.target_cursor = [0, 0]  # Position initiale du curseur sur la carte
+            self.target_cursor = [self.x, self.y] # [0, 0]  # Position initiale du curseur sur la carte
 
         # Activation du mode ciblage avec la touche "P"
         keys = pygame.key.get_pressed()
@@ -251,8 +297,8 @@ class Rapidzio(Unit_V2) :
                 # Verif des positions des enemis
                 if (self.x_attack, self.y_attack) == (enemy.x, enemy.y):
                     # Apply damage
-                    enemy.health_level -= enemy.max_health * 0.40
-                    print(f"Attaque réussie ! Ennemi à ({enemy.x}, {enemy.y}) a perdu {enemy.max_health * 0.40} points de vie.")
+                    enemy.health_level -= 40
+                    print(f"Attaque réussie ! Ennemi à ({enemy.x}, {enemy.y}) a perdu {40} points de vie.")
                     break
 
                 else:
@@ -264,9 +310,101 @@ class Rapidzio(Unit_V2) :
 
 class Berzerk(Unit_V2) :
 
-    def __init__(self, pos, win, wall_rect, walk_right = walk_right, walk_left = walk_left, walk_up = walk_up, walk_down = walk_down, max_health = 150, base_dammage = 40, matrice_zone = matrice_Berzerk, enemy_units = None):
+    def __init__(self, pos, pos_start, wall_rect, win = win, walk_right = walk_right_Berzerk, walk_left = walk_left_Berzerk, walk_up = walk_up_Berzerk, walk_down = walk_down_Berzerk, max_health = 150, base_dammage = 40, matrice_zone = matrice_Berzerk, enemy_units = None, events = None):
+        if max_health is None or max_health <= 0:
+            raise ValueError(f"Invalid max_health value: {max_health}")
         # Appelle le constructeur de la classe parente Unit
-        super().__init__(pos, win, wall_rect, matrice_zone, walk_right, walk_left, walk_up, walk_down, max_health, base_dammage)
-        
+        super().__init__(pos, pos_start, wall_rect, matrice_zone, walk_right, walk_left, walk_up, walk_down, max_health, base_dammage, win = win, events = None)
+        self.x_attack = 0
+        self.y_attack = 0
+        self.events = events
+
     # Mass attack (small zone 4x4, average dammage, no distance limit)    
-    def mass_attack(self, map_matrix, events)
+    def mass_attack(self, map_matrix, events) :
+        # Initialisation des variables pour le ciblage
+        if not hasattr(self, "target_cursor"):  # Ajouter un curseur si non défini
+            self.target_cursor = [self.x, self.y]  # Position initiale du curseur sur la carte
+            cursor_x, cursor_y = self.target_cursor
+
+        # Activation du mode ciblage avec la touche "p" ""POWER"""
+        keys = pygame.key.get_pressed()
+
+        if self.power_enable == True and keys[pygame.K_p] :
+            
+            # Déplacement du curseur si le mode ciblage est activé
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP and self.target_cursor[1] > 0:
+                        self.target_cursor[1] -= 1
+                    elif event.key == pygame.K_DOWN and self.target_cursor[1] < len(map_matrix) - 1:
+                        self.target_cursor[1] += 1
+                    elif event.key == pygame.K_LEFT and self.target_cursor[0] > 0:
+                        self.target_cursor[0] -= 1
+                    elif event.key == pygame.K_RIGHT and self.target_cursor[0] < len(map_matrix[0]) - 1:
+                        self.target_cursor[0] += 1
+
+                    # Afficher la position actuelle du curseur
+                    print(f"Curseur à : {self.target_cursor}")
+
+                    # Validation de la position avec la barre d'espace
+                    if event.key == pygame.K_SPACE:
+                        self.x_attack, self.y_attack = self.target_cursor
+                        print(f"Attaque confirmée à : ({self.x_attack}, {self.y_attack})")
+
+
+            # Dessin de la zone d'attaque sur la carte
+
+            for dx in range(-2, 3):  # Largeur du losange (4x4 cases)
+                for dy in range(-2 + abs(dx), 3 - abs(dx)):  # Contrôle la forme du losange
+                    target_x = cursor_x + dx
+                    target_y = cursor_y + dy
+                    if 0 <= target_x < len(map_matrix[0]) and 0 <= target_y < len(map_matrix):
+                        # Couleur et transparence
+                        if target_x == cursor_x and target_y == cursor_y:
+                            color = (255, 0, 0)  # Rouge pour la case centrale
+                            alpha = 255  # Pleine opacité
+                        else:
+                            color = (0, 255, 0)  # Vert pour les autres cases
+                            alpha = 128  # Moitié d'opacité
+
+                        # Dessin de la zone avec une surface pour gérer la transparence
+                        zone_surface = pygame.Surface((tile_size, tile_size), pygame.SRCALPHA)
+                        zone_surface.fill((*color, alpha))  # Ajouter alpha à la couleur
+                        win.blit(zone_surface, (target_x * tile_size, target_y * tile_size))
+            
+            # Application des dégâts aux ennemis dans la zone
+            for enemy in self.enemy_units:  # Liste des unités ennemis dans la game
+                for dx in range(-2, 3):
+                    for dy in range(-2 + abs(dx), 3 - abs(dx)):
+                        target_x = cursor_x + dx
+                        target_y = cursor_y + dy
+                        if (enemy.x, enemy.y) == (target_x, target_y):
+                            # Apply damage
+                            enemy.health_level -= 20
+
+            # Désactivation du pouvoir après l'attaque
+            self.power_enable = False
+
+
+
+class Spectre(Unit_V2) :
+
+    def __init__(self, pos, pos_start, wall_rect, win = win, walk_right = walk_right_Spectre, walk_left = walk_left_Spectre, walk_up = walk_up_Spectre, walk_down = walk_down_Spectre, max_health = 100, base_dammage = 25, matrice_zone = matrice_Clasian):
+        if max_health is None or max_health <= 0:
+            raise ValueError(f"Invalid max_health value: {max_health}")        
+        # Appelle le constructeur de la classe parente Unit
+        super().__init__(pos, pos_start, wall_rect, matrice_zone, walk_right, walk_left, walk_up, walk_down, max_health, base_dammage, win = win, events = None)
+    
+    # Reveal      (Reveals zone (enemies) for one turn)
+    def reveal(self, map_matrix, events) :
+        
+        # Initialisation des variables pour le ciblage
+        if not hasattr(self, "target_cursor"):  # Ajouter un curseur si non défini
+            self.target_cursor = [self.x, self.y]  # Position initiale du curseur sur la carte
+            cursor_x, cursor_y = self.target_cursor
+
+        # Activation du pouvoir avec la touche "p" ""POWER"""
+        keys = pygame.key.get_pressed()
+
+        if self.power_enable == True and keys[pygame.K_p] :
+            pass
