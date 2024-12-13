@@ -64,6 +64,9 @@ class unit:
             
         return zone_data
     
+
+    
+    
     def passes_through_trap(self) :
         rect = pygame.Rect(self.x, self.y, tile_size, tile_size)
         for water in self.wall_rect.wall_positions["water"] :

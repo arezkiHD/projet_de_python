@@ -18,6 +18,8 @@ y = 30
 grass_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'grass.png')) 
 water_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'water.png')) 
 wall_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'wall.png')) 
+potion_health = pygame.image.load(os.path.join("pictures\maps_picture", 'potion_health.png')) 
+potion_power =  pygame.image.load(os.path.join("pictures\maps_picture", 'potion_power.png')) 
 
 win = pygame.display.set_mode((screan_width, screan_height))
 
@@ -29,9 +31,6 @@ player2_pos = [[300,600],[420,600],[720,600],[1020,600]]
 
 
 ##################################################################################################################
-
-import pygame
-import os
 
 # Clasian animations
 walk_right_Clasian = [pygame.image.load(os.path.join("pictures\direction_chara", "Clasian", f"right ({i}).png")) for i in range(1, 7)]
@@ -214,7 +213,9 @@ UNITS_INFORMATION = {
         "walk_left": walk_left_Clasian,
         "walk_up": walk_up_Clasian,
         "walk_down": walk_down_Clasian,
-        "walk_count" :6 ,
+        "walk_count" :6 ,        
+        "max_health": 100,
+        "base_damage" : 25,
     },
     "unit_Spectre": {
         "matrice": matrice_Spectre,
@@ -223,6 +224,8 @@ UNITS_INFORMATION = {
         "walk_up": walk_up_Spectre,
         "walk_down": walk_down_Spectre,
         "walk_count" :7 ,
+        "max_health": 100,
+        "base_damage" : 25,
     },
     "unit_Rapidzio": {
         "matrice": matrice_Rapidzio,
@@ -231,6 +234,8 @@ UNITS_INFORMATION = {
         "walk_up": walk_up_Rapidzio,
         "walk_down": walk_down_Rapidzio,
         "walk_count" :4 ,
+        "max_health": 100,
+        "base_damage" : 25,
 
     },
     "unit_Berzerk": {
@@ -240,10 +245,12 @@ UNITS_INFORMATION = {
         "walk_up": walk_up_Berzerk,
         "walk_down": walk_down_Berzerk,
         "walk_count" :4 ,
+        "max_health": 100,
+        "base_damage" : 25,
     }
 }
 
 
 
 
-print(UNITS_INFORMATION.keys())
+print("==================>",UNITS_INFORMATION.keys())

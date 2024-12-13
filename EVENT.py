@@ -28,15 +28,21 @@ class Event_manipulation:
 
     def handle_player_turn(self, current_player, other_player, unit_key_selection, event):
         # Process unit selection for the current player's turn
+        print("the len is really big " , len(current_player.units))
         for i, unit in enumerate(current_player.units):
             if event.type == pygame.KEYDOWN and event.key == unit_key_selection[i]:
                 # Deselect all current player's units except the chosen one
                 for other_unit in current_player.units:
                     if other_unit != unit:
                         other_unit.is_selected = False
+                        other_unit.use_attack = False 
+
 
                 # Select or deselect the chosen unit
                 unit.is_selected = not unit.is_selected
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_p :
+                    unit.use_attack =True
+
 
                 # Calculate the active zone if the unit is selected
                 if unit.is_selected:

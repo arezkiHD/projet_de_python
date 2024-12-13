@@ -1,5 +1,7 @@
-from UNIT_main import * 
-from WALL import *
+#from UNIT_main import * 
+#from WALL import *
+from unit_add_work_imad import * 
+from wall_adding_imad_code import * 
 from AFFICHE_GAME_RESAULT import * 
 from map_loader import *
 from Menu_Game import *
@@ -48,7 +50,7 @@ while run:
 
     
     # Handle events
-    EVENT = Event_manipulation(pygame.event.get(), run, [pygame.K_a, pygame.K_z, pygame.K_e],[ pygame.K_q ,pygame.K_s ,pygame.K_d   ])
+    EVENT = Event_manipulation(pygame.event.get(), run, [pygame.K_a, pygame.K_z, pygame.K_e, pygame.K_r],[ pygame.K_q ,pygame.K_s ,pygame.K_d , pygame.K_d  ])
     EVENT.events_handler(player1,player2)
     run = EVENT.run
     
@@ -59,10 +61,12 @@ while run:
     introduction_Game.chosing_units_for_player2(pygame.mouse.get_pos(),pygame.mouse.get_pressed() ,player2 ) 
 
     if introduction_Game.i >=introduction_Game.last_click and mode :
-        player1.initialize_units(UNITS_INFORMATION)
-        player2.initialize_units(UNITS_INFORMATION)
+        player1.initialize_units()
+        player2.initialize_units()
         mode = False            
     wal1.wall_drawing(introduction_Game, player2.units + player1.units)
+    
+
     player2.play(player1,introduction_Game,(255,0,0))
     player1.play(player2,introduction_Game,(0,255,0))             # Update display
     pygame.display.update()
@@ -70,3 +74,4 @@ while run:
 pygame.quit()
 
 
+print(player1.units_choice , player2.units_choice)
