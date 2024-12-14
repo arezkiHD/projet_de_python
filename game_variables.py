@@ -3,6 +3,7 @@ import random
 import os
 from maps_data import*
 import numpy as np
+from map_loader import* 
 
 screan_width = 1280
 screan_height = 720
@@ -11,6 +12,8 @@ tile_size = 30
 
 x = 30
 y = 30
+
+map_matrix = MapLoader("facile").load_map()
 
 
 

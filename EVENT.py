@@ -40,8 +40,6 @@ class Event_manipulation:
 
                 # Select or deselect the chosen unit
                 unit.is_selected = not unit.is_selected
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_p :
-                    unit.use_attack =True
 
 
                 # Calculate the active zone if the unit is selected

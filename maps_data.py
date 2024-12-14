@@ -228,4 +228,4 @@ matrice_Spectre  = [1,0,0,0,0,1,0,0,0,0,1,
 
 
 
-print(len(facile_maps[0][0]))
+print(len(facile_maps[0]))

@@ -60,7 +60,7 @@ while run:
     introduction_Game.chosing_units_for_player1(pygame.mouse.get_pos(),pygame.mouse.get_pressed() ,player1) 
     introduction_Game.chosing_units_for_player2(pygame.mouse.get_pos(),pygame.mouse.get_pressed() ,player2 ) 
 
-    if introduction_Game.i >=introduction_Game.last_click and mode :
+    if introduction_Game.i == introduction_Game.last_click and mode :
         player1.initialize_units()
         player2.initialize_units()
         mode = False            
@@ -73,5 +73,21 @@ while run:
 
 pygame.quit()
 
-
 print(player1.units_choice , player2.units_choice)
+
+
+for u in player1.units + player2.units  :
+    if isinstance(u, Classian) :
+        print(" it is classian ")
+ 
+    elif isinstance(u , Rapidzio) :
+        print("it is rapidzio ")
+     
+    elif isinstance(u , Berzerk): 
+        print("it is Berzerk")
+    else :
+        print("spectre  ")
+ 
+  
+
+

@@ -27,35 +27,35 @@ class Player(unit):
         random.shuffle(units_positions)
 
         self.unit_positions = units_positions   #lest's assume that we get 3 diff position 
-        
-        self.to_add = True
+    
+    
     def initialize_units(self):
                             
                      
         for idx, unit_name in enumerate(self.units_choice):
             if unit_name == 'unit_Clasian' :
-                new_unit = Rapidzio(pos = self.unit_positions[idx] , pos_start=self.unit_positions[idx], wall=self.wall  , win=win  ) 
+                new_unit = Classian(pos = self.unit_positions[idx] , pos_start=self.unit_positions[idx], wall=self.wall  , win=win  ) 
             elif  unit_name == 'unit_Spectre' :
                 new_unit = Spectre(pos = self.unit_positions[idx] , pos_start=self.unit_positions[idx], wall=self.wall  , win=win  )
             elif unit_name == 'unit_Berzerk' :
                 new_unit = Berzerk(pos = self.unit_positions[idx] , pos_start=self.unit_positions[idx], wall=self.wall  , win=win  )
             elif unit_name == 'unit_Rapidzio' :
-                new_unit = Rapidzio(pos = self.unit_positions[idx] , pos_start=self.unit_positions[idx], wall=self.wall  , win=win  )
+                new_unit =Rapidzio(pos = self.unit_positions[idx] , pos_start=self.unit_positions[idx], wall=self.wall  , win=win  )
 
-            if self.to_add :
-                self.units.append(new_unit)
+            
+            self.units.append(new_unit)
 
-    def use_specail_attack(self ,enemy  ) :
+    def use_specail_attack(self  ,enemy  ) :
         
         for unit in self.units :
-            #if isinstance(unit , Classian) :
-            #    unit.special_attack( self, health_cost=10)
             if isinstance(unit , Classian) :
-                unit.special_attack(self)
-            #if isinstance(unit , Berzerk): 
-            #    unit.special_attack( UNITS_INFORMATION["unit_Brezerk"]["matrice"], events,enemy_player.units)
-            #elif isinstance(unit , Classian) :
-            #    unit.special_attack(UNITS_INFORMATION["unit_Classian"]["matrice"] , events,enemy_units) 
+                unit.special_attack( self, health_cost=10)
+            if isinstance(unit , Rapidzio) :
+                unit.special_attack(enemy)
+            if isinstance(unit , Berzerk):
+                unit.special_attack(enemy) 
+            #elif isinstance(unit , Rapidzio)  :
+             #   unit.special_attack(enemy.units) 
 
 
 
@@ -75,12 +75,12 @@ class Player(unit):
     
         for Unit in self.units:
             if Unit.affiche :
-                Unit.draw(health_picture, introduction_Game, color  )
+                Unit.draw( introduction_Game, color  )
                 if Unit.is_selected :
                     Unit.draw_zone(introduction_Game)
                     Unit.move()
                     Unit.basic_attack(self,player2.units)
-                    if Unit.use_attack :  self.use_specail_attack( )
+                    self.use_specail_attack(  player2)
 
                     
                     if Unit.remove:

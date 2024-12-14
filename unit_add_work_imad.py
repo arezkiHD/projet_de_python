@@ -38,6 +38,7 @@ class unit:
         self.get_attacked = False 
         self.power_enable = False  # Special power activation flag
         self.use_attack =False
+        self.move_curs_not_unit = False  #True means we will move cursur not unit 
 
 
         self.walkcount_left = 0
@@ -95,6 +96,7 @@ class unit:
                 self.wall_rect.wall_positions["grass"].append(
                     pygame.Rect(self.x, self.y, tile_size, tile_size)
                 )
+            
 
     def passes_through_trap(self):
         """Handle trap interaction."""
@@ -106,6 +108,7 @@ class unit:
 
     def passes_through_power_enable(self) :
         """Handle potion interaction."""
+        
         self.check_obstacle("power_enable", lambda: self.power_enabling())
     
 
@@ -135,7 +138,7 @@ class unit:
             self.passes_through_power_enable()
 
         
-        if self.is_selected and self.active_zone:
+        if self.is_selected and self.active_zone and not self.move_curs_not_unit:
             keys = pygame.key.get_pressed()
             new_x, new_y = self.x, self.y
             if keys[pygame.K_LEFT] and self.x > 0 :
@@ -211,7 +214,7 @@ class unit:
 
 
                                             
-    def draw(self,health_picture,introduction_game, color  ):
+    def draw(self,introduction_game, color  ):
         
         if  introduction_game.i>=introduction_game.last_click:   
             if self.health_level >0 :
@@ -233,27 +236,20 @@ class unit:
                 if self.is_selected  :
 
                     #pygame.draw.rect(self.win, (255, 0, 0), (self.x, self.y, tile_size, tile_size), 1)
-                    if self.health_level== 100 :
+                    if self.health_level>0  :
                         #self.win.blit(health_picture[0], (self.x, self.y-10))
-                        pygame.draw.rect(self.win ,color, (self.x,self.y-5 ,  tile_size*1,5))
-                    elif self.health_level== 80 :            
-                        #self.win.blit(health_picture[1], (self.x, self.y-10))
-                        pygame.draw.rect(self.win ,color, (self.x,self.y-5,  tile_size*0.8,5))
-                    elif self.health_level== 60 :
-                        #self.win.blit(health_picture[2], (self.x, self.y-10))
-                        pygame.draw.rect(self.win ,color, (self.x,self.y-5,  tile_size*0.6,5))
-                    elif self.health_level== 40:
-                        #self.win.blit(health_picture[3], (self.x, self.y-10))
-                        pygame.draw.rect(self.win ,color, (self.x,self.y-5 ,  tile_size*0.4,5))
-                    elif self.health_level == 20 :
-                        #self.win.blit(health_picture[4], (self.x, self.y-10))
-                        pygame.draw.rect(self.win ,color, (self.x,self.y-5 ,  tile_size*0.2,5))
+                        pygame.draw.rect(self.win ,color, (self.x,self.y-5 ,  tile_size*self.health_level/100,5))
 
 
+""" 
+-- UNITS :
+- Clasian  : Zone de deplacement moyenne,                            degats moyens 25pnts/turn , santé moyenne 100 pnts, SP : Heal Team   (raises teams health 25% )
+- Rapidzio : Zone de deplacement Large  ,                            degats Faible 15pnts/turn , santé Faible  75  pnts, SP : Long shot   (One case Hit, Big Dammage, no distance limit)
+- Berzerk  : Zone de deplacement Faibe  ,                            degats Eleve  40pnts/turn , santé Elevée  150 pnts, SP : Mass attack (small zone 4x4, average dammage, no distance limit)
+- Spectre  : Zone de deplacement Faibe mais tres Large sur les axes, degats Eleve 40 pnts/turn , santé Faible  75  pnts, SP : Reveal      (Reveals zone for one turn)
+"""
 
 
-
-#- Clasian  : Zone de deplacement moyenne,                            degats moyens 25pnts/turn , santé moyenne 100 pnts, SP : Heal Team   (raises teams health 25% )
 
 class Classian(unit):
     def __init__(self,pos,pos_start,wall , win  ,UNITS_INFORMATION=UNITS_INFORMATION  ) :
@@ -262,17 +258,20 @@ class Classian(unit):
         super().__init__(pos=pos,pos_start=pos_start, win=win ,max_health= self.inf["max_health"], base_dammage= self.inf["base_damage"], wall=wall,matrice_zone =self.inf["matrice"], walk_right= self.inf["walk_right"], walk_left= self.inf["walk_left"], walk_up= self.inf["walk_up"] , walk_down= self.inf["walk_down"] )
 
 
-    def special_attack(self, player, health_cost=10):
+    def special_attack(self, player, health_cost=20):
         """
         Heal all allied units except the Classian itself.
         """
-        if  self.power_enable :
-            for unit in player.units : 
-                if unit is not self :
-                    unit.self.health_level += health_cost   
+
+        keys = pygame.key.get_pressed()
+        if  self.power_enable and keys[pygame.K_p] :
+            for unit in player.units :
+               if unit is not self :  
+                unit.health_level = health_cost
+                     
 
 
-        self.power_enable = False
+            self.power_enable = False
 
 
 
@@ -284,58 +283,81 @@ class Rapidzio(unit) :
         super().__init__(pos=pos,pos_start=pos_start, win=win ,max_health= self.inf["max_health"], base_dammage= self.inf["base_damage"], wall=wall,matrice_zone =self.inf["matrice"], walk_right= self.inf["walk_right"], walk_left= self.inf["walk_left"], walk_up= self.inf["walk_up"] , walk_down= self.inf["walk_down"] )
         self.x_attack = 0
         self.y_attack = 0
-        
+    def special_attack(self, enemy_units):
+        """
+        Perform a long-shot special attack: target a specific enemy anywhere on the map.
+        """
 
+        # Initialize cursor position when targeting starts
+        if not hasattr(self, "target_cursor"):
+            self.target_cursor = [self.x, self.y]  # Start cursor at the unit's position
+            self.rec_x, self.rec_y = self.target_cursor
 
-    # Long shot   (One case Hit, Big Dammage, no distance limit)
-    def special_attack(self, map_matrix, events,enemy_units) :
+        keys = pygame.key.get_pressed()
+
+        # Toggle targeting mode with "P"
+        if keys[pygame.K_p]:
+            if not hasattr(self, "p_toggle_debounce") or not self.p_toggle_debounce and self.power_enable :
+                self.move_curs_not_unit = not self.move_curs_not_unit  # Toggle cursor mode
+                self.p_toggle_debounce = True  # Prevent rapid toggling
+                print("Targeting mode toggled:", self.move_curs_not_unit)
+
+        # Reset debounce when P is released
+        if not keys[pygame.K_p]:
+            self.p_toggle_debounce = False
+
+        # Handle targeting mode
+        if self.move_curs_not_unit:
+            # Cursor is active, disable player movement
+            rec_x, rec_y = self.rec_x, self.rec_y
+
+            # Move the cursor using arrow keys
+            if keys[pygame.K_LEFT] and rec_x > 0:
+                rec_x -= self.vel
+            if keys[pygame.K_RIGHT] and rec_x < (len(facile_maps[0][:]) - 1) * tile_size:
+                rec_x += self.vel
+            if keys[pygame.K_UP] and rec_y > 0:
+                rec_y -= self.vel
+            if keys[pygame.K_DOWN] and rec_y < (len(facile_maps[:][0]) - 1) * tile_size:
+                rec_y += self.vel
+
+            # Update cursor position
+            self.rec_x, self.rec_y = rec_x, rec_y
+
+            # Draw the targeting cursor
+            if self.power_enable  and self.power_enable:
+                pygame.draw.rect(
+                self.win,
+                (255, 0, 0),  # Red color for the cursor
+                (rec_x, rec_y, tile_size, tile_size),
+                2  # Border thickness
+                )
+
+            # Confirm attack with "SPACE"
+            if keys[pygame.K_SPACE]:
+                self.x_attack, self.y_attack = rec_x, rec_y
                 
-        # Initialisation des variables pour le ciblage
-        if not hasattr(self, "target_cursor"):  # Ajouter un curseur si non défini
-            self.target_cursor = [self.x, self.y] # [0, 0]  # Position initiale du curseur sur la carte
 
-        # Activation du mode ciblage avec la touche "P"
-        self.events= self.events
-        if self.power_enable == True and self.events[pygame.K_p] :
-            
-            # Déplacement du curseur si le mode ciblage est activé
-            for event in events:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP and self.target_cursor[1] > 0:
-                        self.target_cursor[1] -= 1
-                    elif event.key == pygame.K_DOWN and self.target_cursor[1] < len(map_matrix) - 1:
-                        self.target_cursor[1] += 1
-                    elif event.key == pygame.K_LEFT and self.target_cursor[0] > 0:
-                        self.target_cursor[0] -= 1
-                    elif event.key == pygame.K_RIGHT and self.target_cursor[0] < len(map_matrix[0]) - 1:
-                        self.target_cursor[0] += 1
+                # Perform the attack
+                for enemy in enemy_units.units:
+                    if (self.x_attack, self.y_attack) == (enemy.x, enemy.y):
+                        enemy.health_level -= 40
+                        enemy.get_attacked =True 
+                        enemy.x , enemy.y = enemy.pos_start 
+    
+                        break
+                
+               
 
-                    # Afficher la position actuelle du curseur
-                    print(f"Curseur à : {self.target_cursor}")
+                # Exit targeting mode and disable power
+                self.move_curs_not_unit = False
+                self.power_enable = False
 
-                    # Validation de la position avec la barre d'espace
-                    if event.key == pygame.K_SPACE:
-                        self.x_attack, self.y_attack = self.target_cursor
-                        print(f"Attaque confirmée à : ({self.x_attack}, {self.y_attack})")
-
-            # Dessin du curseur sur la carte
-            cursor_x, cursor_y = self.target_cursor
-            pygame.draw.rect(win, (255, 0, 0), (cursor_x * tile_size, cursor_y * tile_size, tile_size, tile_size), 2)
+       
+       
+       
 
 
-            for enemy in enemy_units:  # Liste des unités enemis dans la game
-                # Verif des positions des enemis
-                if (self.x_attack, self.y_attack) == (enemy.x, enemy.y):
-                    # Apply damage
-                    enemy.health_level -= 40
-                    print(f"Attaque réussie ! Ennemi à ({enemy.x}, {enemy.y}) a perdu {40} points de vie.")
-                    break
-
-                else:
-                    print("Aucun ennemi trouvé à cette position.")
-
-            # Désactivation du pouvoir après l'attaque
-            self.power_enable = False
 
 
 
@@ -344,75 +366,77 @@ class Berzerk(unit) :
         self.inf= UNITS_INFORMATION["unit_Berzerk"]     
         # Appelle le constructeur de la classe parente Unit
         super().__init__(pos=pos,pos_start=pos_start, win=win ,max_health= self.inf["max_health"], base_dammage= self.inf["base_damage"], wall=wall,matrice_zone =self.inf["matrice"], walk_right= self.inf["walk_right"], walk_left= self.inf["walk_left"], walk_up= self.inf["walk_up"] , walk_down= self.inf["walk_down"] )
-        self.x_attack = 0
-        self.y_attack = 0
+        self.x_attack = []
+        self.y_attack = []
         
 
-    # Mass attack (small zone 4x4, average dammage, no distance limit)    
-    def special_attack(self, map_matrix, events,enemy_units) :
-        # Initialisation des variables pour le ciblage
-        if not hasattr(self, "target_cursor"):  # Ajouter un curseur si non défini
-            self.target_cursor = [self.x, self.y]  # Position initiale du curseur sur la carte
-            cursor_x, cursor_y = self.target_cursor
-
-        # Activation du mode ciblage avec la touche "p" ""POWER"""
+    def special_attack(self, enemy_units):
+        """
+        Perform a long-shot special attack: target a specific enemy anywhere on the map.
+        """
+        # Initialize cursor position when targeting starts
+        if not hasattr(self, "target_cursor"):
+            self.target_cursor = [self.x, self.y]  # Start cursor at the unit's position
+            self.rec_x, self.rec_y = self.target_cursor
         keys = pygame.key.get_pressed()
+        # Toggle targeting mode with "P"
+        if keys[pygame.K_p]:
+            if not hasattr(self, "p_toggle_debounce") or not self.p_toggle_debounce and self.power_enable:
+                self.move_curs_not_unit = not self.move_curs_not_unit  # Toggle cursor mode
+                self.p_toggle_debounce = True  # Prevent rapid toggling
+                print("Targeting mode toggled:", self.move_curs_not_unit)
+        # Reset debounce when P is released
+        if not keys[pygame.K_p]:
+            self.p_toggle_debounce = False
+        # Handle targeting mode
+        if self.move_curs_not_unit:
+            # Cursor is active, disable player movement
+            rec_x, rec_y = self.rec_x, self.rec_y
+            # Move the cursor using arrow keys
+            if keys[pygame.K_LEFT] and rec_x > 0:
+                rec_x -= self.vel
+            if keys[pygame.K_RIGHT] and rec_x < (len(facile_maps[0][:]) - 1) * tile_size:
+                rec_x += self.vel
+            if keys[pygame.K_UP] and rec_y > 0:
+                rec_y -= self.vel
+            if keys[pygame.K_DOWN] and rec_y < (len(facile_maps[:][0]) - 1) * tile_size:
+                rec_y += self.vel
+            # Update cursor position
+            self.rec_x, self.rec_y = rec_x, rec_y
+            # Draw the targeting cursor
+            if self.power_enable :
+                for dx in range(-2, 3) :
+                    for dy in range(-2 ,3 ):
 
-        if self.power_enable == True and keys[pygame.K_p] :
-            
-            # Déplacement du curseur si le mode ciblage est activé
-            for event in events:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP and self.target_cursor[1] > 0:
-                        self.target_cursor[1] -= 1
-                    elif event.key == pygame.K_DOWN and self.target_cursor[1] < len(map_matrix) - 1:
-                        self.target_cursor[1] += 1
-                    elif event.key == pygame.K_LEFT and self.target_cursor[0] > 0:
-                        self.target_cursor[0] -= 1
-                    elif event.key == pygame.K_RIGHT and self.target_cursor[0] < len(map_matrix[0]) - 1:
-                        self.target_cursor[0] += 1
+                        pygame.draw.rect(
+                        self.win,
+                        (255, 0, 0),  # Red color for the cursor
+                        (rec_x+dx*tile_size, rec_y+ dy*tile_size, tile_size, tile_size),
+                        2  # Border thickness
+                        )
+            # Confirm attack with "SPACE"
+            if keys[pygame.K_SPACE] and self.power_enable:    
+                for dx in range(-2, 3) :
+                    for dy in range(-2 ,3 ):
+                        self.x_attack.append(rec_x+dx)
+                        self.y_attack.append(rec_y + dy ) 
 
-                    # Afficher la position actuelle du curseur
-                    print(f"Curseur à : {self.target_cursor}")
+                
+                for enemy in enemy_units.units :
 
-                    # Validation de la position avec la barre d'espace
-                    if event.key == pygame.K_SPACE:
-                        self.x_attack, self.y_attack = self.target_cursor
-                        print(f"Attaque confirmée à : ({self.x_attack}, {self.y_attack})")
+                    if enemy.x  in self.x_attack and   enemy.y in self.y_attack:
+                        enemy.health_level -= 20
+                        enemy.get_attacked =True 
+                        enemy.x , enemy.y = enemy.pos_start 
 
-
-            # Dessin de la zone d'attaque sur la carte
-
-            for dx in range(-2, 3):  # Largeur du losange (4x4 cases)
-                for dy in range(-2 + abs(dx), 3 - abs(dx)):  # Contrôle la forme du losange
-                    target_x = cursor_x + dx
-                    target_y = cursor_y + dy
-                    if 0 <= target_x < len(map_matrix[0]) and 0 <= target_y < len(map_matrix):
-                        # Couleur et transparence
-                        if target_x == cursor_x and target_y == cursor_y:
-                            color = (255, 0, 0)  # Rouge pour la case centrale
-                            alpha = 255  # Pleine opacité
-                        else:
-                            color = (0, 255, 0)  # Vert pour les autres cases
-                            alpha = 128  # Moitié d'opacité
-
-                        # Dessin de la zone avec une surface pour gérer la transparence
-                        zone_surface = pygame.Surface((tile_size, tile_size), pygame.SRCALPHA)
-                        zone_surface.fill((*color, alpha))  # Ajouter alpha à la couleur
-                        win.blit(zone_surface, (target_x * tile_size, target_y * tile_size))
-            
-            # Application des dégâts aux ennemis dans la zone
-            for enemy in enemy_units:  # Liste des unités ennemis dans la game
-                for dx in range(-2, 3):
-                    for dy in range(-2 + abs(dx), 3 - abs(dx)):
-                        target_x = cursor_x + dx
-                        target_y = cursor_y + dy
-                        if (enemy.x, enemy.y) == (target_x, target_y):
-                            # Apply damage
-                            enemy.health_level -= 20
-
-            # Désactivation du pouvoir après l'attaque
-            self.power_enable = False
+                        
+                    
+                    
+                # Exit targeting mode and disable power
+                self.move_curs_not_unit = False
+                self.power_enable = False
+   
+    
 
 
 
