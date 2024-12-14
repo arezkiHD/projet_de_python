@@ -192,3 +192,6 @@ class introduction_game():
             pygame.mixer.music.play() 
             
                                                                                                                                                                                                                 
+
+                                                                                                                                                        
+                                                                                                                                                    

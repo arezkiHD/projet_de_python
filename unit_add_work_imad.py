@@ -1,11 +1,12 @@
 from wall_adding_imad_code import *
 from game_variables import *
+from AFFICHE_GAME_RESAULT import * 
 
 
 
 
 class unit:
-    def __init__(self,pos,pos_start, win,max_health, base_dammage , wall,matrice_zone , walk_right, walk_left, walk_up , walk_down ):
+    def __init__(self,pos,pos_start, win,max_health, base_dammage , wall,matrice_zone , walk_right, walk_left, walk_up , walk_down, name  ):
         self.x = pos[0]
         self.y = pos[1]
         self.pos_start = pos_start
@@ -14,7 +15,7 @@ class unit:
         self.health_level = max_health
         self.wall_rect = wall  
          
-        
+        self.name = name 
         self.win = win
         self.matrice = matrice_zone
         
@@ -37,7 +38,7 @@ class unit:
         self.affiche = True 
         self.get_attacked = False 
         self.power_enable = False  # Special power activation flag
-        self.use_attack =False
+        #self.use_attack =False
         self.move_curs_not_unit = False  #True means we will move cursur not unit 
 
 
@@ -200,7 +201,7 @@ class unit:
                 # Enemy is in range: Attack!
                 en_unit.health_level -= 20
                 en_unit.get_attacked = True  # Make the enemy unit visible
-                en_unit.to_remove()     # Check if the enemy should be removed  
+                              
                    
 
                 # If you want to relocate the enemy only if it's still alive:
@@ -252,13 +253,13 @@ class unit:
 
 
 class Classian(unit):
-    def __init__(self,pos,pos_start,wall , win  ,UNITS_INFORMATION=UNITS_INFORMATION  ) :
+    def __init__(self,pos,pos_start,wall , win  ,UNITS_INFORMATION=UNITS_INFORMATION   ) :
         self.inf= UNITS_INFORMATION["unit_Clasian"]
 
-        super().__init__(pos=pos,pos_start=pos_start, win=win ,max_health= self.inf["max_health"], base_dammage= self.inf["base_damage"], wall=wall,matrice_zone =self.inf["matrice"], walk_right= self.inf["walk_right"], walk_left= self.inf["walk_left"], walk_up= self.inf["walk_up"] , walk_down= self.inf["walk_down"] )
+        super().__init__(pos=pos,pos_start=pos_start, win=win ,max_health= self.inf["max_health"], base_dammage= self.inf["base_damage"], wall=wall,matrice_zone =self.inf["matrice"], walk_right= self.inf["walk_right"], walk_left= self.inf["walk_left"], walk_up= self.inf["walk_up"] , walk_down= self.inf["walk_down"], name =self.inf["name"]  )
 
 
-    def special_attack(self, player, health_cost=20):
+    def special_attack(self, player, health_cost):
         """
         Heal all allied units except the Classian itself.
         """
@@ -280,7 +281,7 @@ class Rapidzio(unit) :
     def __init__(self,pos,pos_start,wall  ,win ,UNITS_INFORMATION= UNITS_INFORMATION   ) :
         self.inf= UNITS_INFORMATION["unit_Rapidzio"]     
         # Appelle le constructeur de la classe parente Unit
-        super().__init__(pos=pos,pos_start=pos_start, win=win ,max_health= self.inf["max_health"], base_dammage= self.inf["base_damage"], wall=wall,matrice_zone =self.inf["matrice"], walk_right= self.inf["walk_right"], walk_left= self.inf["walk_left"], walk_up= self.inf["walk_up"] , walk_down= self.inf["walk_down"] )
+        super().__init__(pos=pos,pos_start=pos_start, win=win ,max_health= self.inf["max_health"], base_dammage= self.inf["base_damage"], wall=wall,matrice_zone =self.inf["matrice"], walk_right= self.inf["walk_right"], walk_left= self.inf["walk_left"], walk_up= self.inf["walk_up"] , walk_down= self.inf["walk_down"], name =self.inf["name"] )
         self.x_attack = 0
         self.y_attack = 0
     def special_attack(self, enemy_units):
@@ -300,7 +301,6 @@ class Rapidzio(unit) :
             if not hasattr(self, "p_toggle_debounce") or not self.p_toggle_debounce and self.power_enable :
                 self.move_curs_not_unit = not self.move_curs_not_unit  # Toggle cursor mode
                 self.p_toggle_debounce = True  # Prevent rapid toggling
-                print("Targeting mode toggled:", self.move_curs_not_unit)
 
         # Reset debounce when P is released
         if not keys[pygame.K_p]:
@@ -342,7 +342,8 @@ class Rapidzio(unit) :
                 for enemy in enemy_units.units:
                     if (self.x_attack, self.y_attack) == (enemy.x, enemy.y):
                         enemy.health_level -= 40
-                        enemy.get_attacked =True 
+                        enemy.get_attacked =True
+
                         enemy.x , enemy.y = enemy.pos_start 
     
                         break
@@ -365,7 +366,7 @@ class Berzerk(unit) :
     def __init__(self,pos,pos_start,wall  ,win ,UNITS_INFORMATION = UNITS_INFORMATION  ) :
         self.inf= UNITS_INFORMATION["unit_Berzerk"]     
         # Appelle le constructeur de la classe parente Unit
-        super().__init__(pos=pos,pos_start=pos_start, win=win ,max_health= self.inf["max_health"], base_dammage= self.inf["base_damage"], wall=wall,matrice_zone =self.inf["matrice"], walk_right= self.inf["walk_right"], walk_left= self.inf["walk_left"], walk_up= self.inf["walk_up"] , walk_down= self.inf["walk_down"] )
+        super().__init__(pos=pos,pos_start=pos_start, win=win ,max_health= self.inf["max_health"], base_dammage= self.inf["base_damage"], wall=wall,matrice_zone =self.inf["matrice"], walk_right= self.inf["walk_right"], walk_left= self.inf["walk_left"], walk_up= self.inf["walk_up"] , walk_down= self.inf["walk_down"]  , name =self.inf["name"])
         self.x_attack = []
         self.y_attack = []
         
@@ -445,19 +446,24 @@ class Spectre(unit) :
     def __init__(self,pos,pos_start,wall , win  ,UNITS_INFORMATION = UNITS_INFORMATION ) :
         self.inf= UNITS_INFORMATION["unit_Spectre"]     
         # Appelle le constructeur de la classe parente Unit
-        super().__init__(pos=pos,pos_start=pos_start, win=win ,max_health= self.inf["max_health"], base_dammage= self.inf["base_damage"], wall=wall,matrice_zone =self.inf["matrice"], walk_right= self.inf["walk_right"], walk_left= self.inf["walk_left"], walk_up= self.inf["walk_up"] , walk_down= self.inf["walk_down"] )
+        super().__init__(pos=pos,pos_start=pos_start, win=win ,max_health= self.inf["max_health"], base_dammage= self.inf["base_damage"], wall=wall,matrice_zone =self.inf["matrice"], walk_right= self.inf["walk_right"], walk_left= self.inf["walk_left"], walk_up= self.inf["walk_up"] , walk_down= self.inf["walk_down"]  , name =self.inf["name"])
     
     
     # Reveal      (Reveals zone (enemies) for one turn)
-    def special_attack(self, map_matrix, events) :
-        
-        # Initialisation des variables pour le ciblage
-        if not hasattr(self, "target_cursor"):  # Ajouter un curseur si non défini
-            self.target_cursor = [self.x, self.y]  # Position initiale du curseur sur la carte
-            cursor_x, cursor_y = self.target_cursor
-
-        # Activation du pouvoir avec la touche "p" ""POWER"""
+    def special_attack(self , enemy ) :
         keys = pygame.key.get_pressed()
 
         if self.power_enable == True and keys[pygame.K_p] :
-            pass
+            for en_unit in enemy.units :
+               
+                en_unit.rect.topleft = (en_unit.x, en_unit.y)
+                
+                if any(en_unit.rect.colliderect(zone) for zone in self.active_zone):
+                    en_unit.affiche = True 
+
+
+
+
+
+
+

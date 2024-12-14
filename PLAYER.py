@@ -49,13 +49,13 @@ class Player(unit):
         
         for unit in self.units :
             if isinstance(unit , Classian) :
-                unit.special_attack( self, health_cost=10)
+                unit.special_attack( self, health_cost=80)
             if isinstance(unit , Rapidzio) :
                 unit.special_attack(enemy)
             if isinstance(unit , Berzerk):
                 unit.special_attack(enemy) 
-            #elif isinstance(unit , Rapidzio)  :
-             #   unit.special_attack(enemy.units) 
+            elif isinstance(unit , Spectre)  :
+                unit.special_attack(enemy) 
 
 
 

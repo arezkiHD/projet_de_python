@@ -211,6 +211,7 @@ unit_selection_player2 = {  # here i stock information to chose on the menu to p
 
 UNITS_INFORMATION = {
     "unit_Clasian": {
+        "name" : "Clasian" ,
         "matrice": matrice_Clasian,
         "walk_right": walk_right_Clasian,
         "walk_left": walk_left_Clasian,
@@ -221,6 +222,7 @@ UNITS_INFORMATION = {
         "base_damage" : 25,
     },
     "unit_Spectre": {
+        "name" : "Spectre" ,
         "matrice": matrice_Spectre,
         "walk_right": walk_right_Spectre,
         "walk_left": walk_left_Spectre,
@@ -231,6 +233,7 @@ UNITS_INFORMATION = {
         "base_damage" : 25,
     },
     "unit_Rapidzio": {
+        "name" : "Rapidzio" ,
         "matrice": matrice_Rapidzio,
         "walk_right": walk_right_Rapidzio,
         "walk_left": walk_left_Rapidzio,
@@ -242,6 +245,7 @@ UNITS_INFORMATION = {
 
     },
     "unit_Berzerk": {
+        "name" : "Berzerk" ,
         "matrice": matrice_Berzerk,
         "walk_right": walk_right_Berzerk,
         "walk_left": walk_left_Berzerk,

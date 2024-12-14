@@ -3,6 +3,7 @@ from game_variables import *
 
 tile_size = 30
 
+
 class Wall:
     def __init__(self, grass_image, map, dim, win, width, height, water_image=water_image, wall_image=wall_image, bonus_image = potion_health, power_image = potion_power ):
     #def __init__(self, grass_image, map, dim, win, width, height, water_image=water_image, wall_image=wall_image):

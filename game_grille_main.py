@@ -23,7 +23,7 @@ map_matrix = MapLoader("facile").load_map()
 
 # Player settings
 
-font = pygame.font.SysFont("Arial", 50)
+
 #game_music = pygame.mixer.music.load("Arcade fast flow1.ogg")
 
 #pygame.mixer.music.play()
@@ -31,12 +31,16 @@ font = pygame.font.SysFont("Arial", 50)
                 
 # Initialize wall and player objects
 wal1 = Wall(grass_image, map_matrix, tile_size, win, tile_size, tile_size)
-texte1 = afiche_texte("hello",1000,30,(255,255,255),win)
 introduction_Game = introduction_game(intro_game_picture,win)
- #def __init__(self,units_positions,units_choice  , image_player,wall):
+
 
 player1=Player(player1_pos,False,intro_game_picture,wal1)
 player2=Player(player2_pos,True ,intro_game_picture,wal1)
+
+
+texte1.draw_title( f" player2 units are : { player2.units_choice}" , x_of_black_screan, texte1.space+texte1.value  )
+
+
 
  
 
@@ -63,8 +67,16 @@ while run:
     if introduction_Game.i == introduction_Game.last_click and mode :
         player1.initialize_units()
         player2.initialize_units()
+
+        
         mode = False            
     wal1.wall_drawing(introduction_Game, player2.units + player1.units)
+    if introduction_Game.i == introduction_Game.last_click :
+        texte1.draw_title( f" player1 units are : { player1.units_choice}" , x_of_black_screan, 0  )
+        
+        texte1.draw_title( f" player2 units are : { player2.units_choice}" , x_of_black_screan, texte1.space+texte1.value  )
+
+
     
 
     player2.play(player1,introduction_Game,(255,0,0))
