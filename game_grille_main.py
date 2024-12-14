@@ -38,8 +38,7 @@ player1=Player(player1_pos,False,intro_game_picture,wal1)
 player2=Player(player2_pos,True ,intro_game_picture,wal1)
 
 
-texte1.draw_title( f" player2 units are : { player2.units_choice}" , x_of_black_screan, texte1.space+texte1.value  )
-
+aff = affiche_resault()
 
 
  
@@ -71,10 +70,10 @@ while run:
         
         mode = False            
     wal1.wall_drawing(introduction_Game, player2.units + player1.units)
-    if introduction_Game.i == introduction_Game.last_click :
-        texte1.draw_title( f" player1 units are : { player1.units_choice}" , x_of_black_screan, 0  )
-        
-        texte1.draw_title( f" player2 units are : { player2.units_choice}" , x_of_black_screan, texte1.space+texte1.value  )
+    aff.draw_results(player1 , player2 )
+
+
+    affiche_resault
 
 
     
