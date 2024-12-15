@@ -122,7 +122,7 @@ class unit:
 
     
     def draw_zone(self,introduction_image ):
-        if introduction_image.i >= unit_selection_player2["choice2"]["number_of_click_max"]: 
+        if introduction_image.i >= introduction_image.last_click: 
      # Draw grass tiles
             zone=[]
             if  self.is_selected and not self.remove:

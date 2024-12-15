@@ -7,11 +7,7 @@ from map_loader import *
 from Menu_Game import *
 from EVENT import*
 from PLAYER import*
-
 from game_variables import *
-
-
-
 # Initialize pygame
 pygame.init()
 
@@ -70,10 +66,11 @@ while run:
         
         mode = False            
     wal1.wall_drawing(introduction_Game, player2.units + player1.units)
-    aff.draw_results(player1 , player2 )
+    if introduction_Game.i >= introduction_Game.last_click :
+        aff.draw_results(player1 , player2 )
 
 
-    affiche_resault
+   
 
 
     

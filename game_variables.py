@@ -73,76 +73,83 @@ menu_picture_Berzerk = pygame.image.load("pictures\game_manipulation\Berzerk .pn
 health_picture=[pygame.image.load(os.path.join("pictures\health_bar",f"health{i}.png")) for i in range(1,6) ]
 intro_game_picture=pygame.image.load("pictures\game_manipulation\into_pic.jpg")
 
-number_of_player = {  # here i stock information to chose on the menu to play 2 vs 2 or 3 vs 3 
-    "choice1" : {
-        "name" : "2v2" ,
-        "pos_x" : 100, 
-        "pos_y" : 100 ,
-        "picture" : grass_image, 
-        "height_before" : 40,
-        "width_before" : 100 ,
-        "height_after" : 100,
-        "width_after" : 200 ,
-        "number_of_click_min" : 1 ,
 
- },
-
-    "choice2" :{ 
-    "name" : "3v3" ,   
-    "pos_x" : 400, 
-    "pos_y" : 100 ,
-    "picture" : water_image,
-    "height_before" : 40,
-    "width_before" : 100 ,
-    "height_after" : 100,
-    "width_after" : 200 ,
-    "number_of_click_max" : 2,
-
-      }, 
-}
-  
-      
-
-unit_selection_player1 = {  # here i stock information to chose on the menu to play 2 vs 2 or 3 vs 3 and also s
-    "choice1": { 
-        "name": "unit_Clasian",
-        "pos_x": 30, 
-        "pos_y": 300,
-        "picture": menu_picture_Clasian, 
-        "height_before": 300,
-        "width_before": 180,
-        "height_after": 500,
-        "width_after": 200
+number_of_player = {  # Here I stock information to choose on the menu to play 2v2 or 3v3
+    "choice1": {
+        "name": "2v2",
+        "pos_x": screan_width  // 4,  
+        "pos_y": screan_height // 2, 
+        "picture": grass_image,
+        "height_before": 80, 
+        "width_before": 160, 
+        "height_after": 160, 
+        "width_after": 320,  
+        "number_of_click_min": 1,
     },
-    "choice2": { 
-        "name": "unit_Spectre",    
-        "pos_x": 330, 
-        "pos_y": 300,
+
+    "choice2": {
+        "name": "3v3",
+        "pos_x": 3*screan_width //4,
+        "pos_y": screan_height //2  ,  
+        "picture": water_image,
+        "height_before": 80,  
+        "width_before": 160,  
+        "height_after": 160,  
+        "width_after": 320,  
+        "number_of_click_max": 2,
+    },
+}
+
+
+
+unit_selection_player1 = {
+    "choice1": {
+        "name": "unit_Clasian",
+        "range_helath": "Balanced unit with medium range, 25 dmg/turn, 100 HP",
+        "Special": "Heals all allies (25% HP). Basic attack included",
+        "pos_x": 100,  
+        "pos_y": 100,  
+        "picture": menu_picture_Clasian,
+        "height_before": 120, 
+        "width_before": 120,
+        "height_after": 160,  
+        "width_after": 160
+    },
+    "choice2": {
+        "name": "unit_Spectre",
+        "range_helath": "Agile unit with long axis movement, 40 dmg/turn, 75 HP",
+        "Special": "Reveal (uncovers hidden areas for one turn). Basic attack included",
+        "pos_x": 100,  
+        "pos_y": 250,  
         "picture": menu_picture_Spectre,
-        "height_before": 90,
-        "width_before": 90,
-        "height_after": 180,
-        "width_after": 180
+        "height_before": 120,
+        "width_before": 120,
+        "height_after": 160,
+        "width_after": 160
     },
     "choice3": {
-        "name": "unit_Rapidzio",     
-        "pos_x": 450,
-        "pos_y": 300,
+        "name": "unit_Rapidzio",
+        "range_helath": "Long-range unit, 15 dmg/turn, 75 HP",
+        "Special": "Long shot (high damage, unlimited range). Basic attack included",
+        "pos_x": 100, 
+        "pos_y": 400, 
         "picture": menu_picture_Rapidzio,
-        "height_before": 90,
-        "width_before": 90,
-        "height_after": 180,
-        "width_after": 180
+        "height_before": 120,
+        "width_before": 120,
+        "height_after": 160,
+        "width_after": 160
     },
     "choice4": {
-        "name": "unit_Berzerk",    
-        "pos_x": 660,
-        "pos_y": 500,
+        "name": "unit_Berzerk",
+        "range_helath": "High-damage unit, 40 dmg/turn, 150 HP",
+        "Special": "Mass attack (4x4 area, 20 dmg). Basic attack included",
+        "pos_x": 100,  
+        "pos_y": 550,  
         "picture": menu_picture_Berzerk,
-        "height_before": 300,
-        "width_before": 180,
-        "height_after": 500,
-        "width_after": 200
+        "height_before": 120,
+        "width_before": 120,
+        "height_after": 160,
+        "width_after": 160
     },
     "number of click": {
         "number_of_click_min_for_3v3": 2,
@@ -152,48 +159,54 @@ unit_selection_player1 = {  # here i stock information to chose on the menu to p
     }
 }
 
-unit_selection_player2 = {  # here i stock information to chose on the menu to play 2 vs 2 or 3 vs 3 
+unit_selection_player2 = {
     "choice1": {
-        "name": "unit_Clasian", 
-        "pos_x": 30,
-        "pos_y": 500,
-        "picture": grass_image, 
-        "height_before": 90,
-        "width_before": 90,
-        "height_after": 180,
-        "width_after": 180,
-        "number_of_click_min": 5
+        "name": "unit_Clasian",
+        "range_helath": "Balanced unit with medium range, 25 dmg/turn, 100 HP",
+        "Special": "Heals all allies (25% HP). Basic attack included",
+        "pos_x": 100, 
+        "pos_y": 550,  
+        "picture": menu_picture_Clasian,
+        "height_before": 120,
+        "width_before": 120,
+        "height_after": 160,
+        "width_after": 160
     },
     "choice2": {
-        "name": "unit_Spectre",    
-        "pos_x": 330,
-        "pos_y": 500,
-        "picture": walk_up_Spectre[0],
-        "height_before": 90,
-        "width_before": 90,
-        "height_after": 180,
-        "width_after": 180,
-        "number_of_click_max": 8
+        "name": "unit_Spectre",
+        "range_helath": "Agile unit with long axis movement, 40 dmg/turn, 75 HP",
+        "Special": "Reveal (uncovers hidden areas for one turn). Basic attack included",
+        "pos_x": 100, 
+        "pos_y": 400,  
+        "picture": menu_picture_Spectre,
+        "height_before": 120,
+        "width_before": 120,
+        "height_after": 160,
+        "width_after": 160
     },
     "choice3": {
-        "name": "unit_Rapidzio",    
-        "pos_x": 450,
-        "pos_y": 500,
-        "picture": walk_up_Rapidzio[0],
-        "height_before": 90,
-        "width_before": 90,
-        "height_after": 180,
-        "width_after": 180
+        "name": "unit_Rapidzio",
+        "range_helath": "Long-range unit, 15 dmg/turn, 75 HP",
+        "Special": "Long shot (high damage, unlimited range). Basic attack included",
+        "pos_x": 100, 
+        "pos_y": 250,  
+        "picture": menu_picture_Rapidzio,
+        "height_before": 120,
+        "width_before": 120,
+        "height_after": 160,
+        "width_after": 160
     },
     "choice4": {
-        "name": "unit_Berzerk",    
-        "pos_x": 660,
-        "pos_y": 500,
-        "picture": walk_up_Berzerk[0],
-        "height_before": 90,
-        "width_before": 90,
-        "height_after": 180,
-        "width_after": 180
+        "name": "unit_Berzerk",
+        "range_helath": "High-damage unit, 40 dmg/turn, 150 HP",
+        "Special": "Mass attack (4x4 area, 20 dmg). Basic attack included",
+        "pos_x": 100, 
+        "pos_y": 100,  
+        "picture": menu_picture_Berzerk,
+        "height_before": 120,
+        "width_before": 120,
+        "height_after": 160,
+        "width_after": 160
     },
     "number of click": {
         "number_of_click_min_for_3v3": 5,
@@ -202,6 +215,8 @@ unit_selection_player2 = {  # here i stock information to chose on the menu to p
         "number_of_click_max_for_2v2": 6
     }
 }
+
+
 
 
 
