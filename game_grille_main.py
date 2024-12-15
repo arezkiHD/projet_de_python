@@ -61,7 +61,7 @@ while run:
         aff.draw_results(player1 , player2 )
         
     if introduction_Game.i == introduction_Game.last_click : # to entre only one time !!
-        game_music = pygame.mixer.music.load(r"C:\Users\ikeba\Desktop\python_project\music\game_music.wav")
+        game_music = pygame.mixer.music.load("music\game_music.wav")
         pygame.mixer.music.play(-1)
         introduction_Game.i += 1
 

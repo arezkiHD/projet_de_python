@@ -58,47 +58,6 @@ intro_game_picture=pygame.image.load("pictures\game_manipulation\into_pic.jpeg")
 image_2v2=pygame.image.load("pictures\game_manipulation\icone_2vs2.png")
 image_3v3=pygame.image.load("pictures\game_manipulation\icone_3vs3.png")
 
-"""
-#image_player =  pygame.image.load(os.path.join("pictures\humain_male", 'up (2).png')) 
-grass_image =  pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\maps_picture", 'grass_x_30.jpg')) 
-water_image =  pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\maps_picture", 'water_30.jpg')) 
-wall_image =  pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\maps_picture", 'wall_1_30.png')) 
-potion_health = pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\maps_picture", 'potion_health.png')) 
-potion_power =  pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\maps_picture", 'potion_power.png')) 
-
-# Clasian animations
-walk_right_Clasian = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "Clasian", f"right ({i}).png")) for i in range(1, 7)]
-walk_left_Clasian = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "Clasian", f"left ({i}).png")) for i in range(1, 7)]
-walk_up_Clasian = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "Clasian", f"up ({i}).png")) for i in range(1, 7)]
-walk_down_Clasian = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "Clasian", f"down ({i}).png")) for i in range(1, 7)]
-menu_picture_Clasian = pygame.image.load(r"C:\Users\ikeba\Desktop\python_project\pictures\game_manipulation\Clasian.jpeg")
-
-# Spectre animations
-walk_right_Spectre = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "spectre", f"right ({i}).png")) for i in range(1, 8)]
-walk_left_Spectre = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "spectre", f"left ({i}).png")) for i in range(1, 8)]
-walk_up_Spectre = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "spectre", f"up ({i}).png")) for i in range(1, 8)]
-walk_down_Spectre = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "spectre", f"down ({i}).png")) for i in range(1, 8)]
-menu_picture_Spectre = pygame.image.load(r"C:\Users\ikeba\Desktop\python_project\pictures\game_manipulation\Spectre.jpeg")
-
-# Rapidzio animations
-walk_right_Rapidzio = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "rapidzio", f"right ({i}).png")) for i in range(1, 5)]
-walk_left_Rapidzio = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "rapidzio", f"left ({i}).png")) for i in range(1, 5)]
-walk_up_Rapidzio = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "rapidzio", f"up ({i}).png")) for i in range(1, 5)]
-walk_down_Rapidzio = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "rapidzio", f"down ({i}).png")) for i in range(1, 5)]
-menu_picture_Rapidzio = pygame.image.load(r"C:\Users\ikeba\Desktop\python_project\pictures\game_manipulation\Rapidzio.jpeg")
-
-# Berzerk animations
-walk_right_Berzerk = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "berzerk", f"right ({i}).png")) for i in range(1, 5)]
-walk_left_Berzerk = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "berzerk", f"left ({i}).png")) for i in range(1, 5)]
-walk_up_Berzerk = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "berzerk", f"up ({i}).png")) for i in range(1,5)]
-walk_down_Berzerk = [pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\direction_chara", "berzerk", f"down ({i}).png")) for i in range(1, 5)]
-menu_picture_Berzerk = pygame.image.load(r"C:\Users\ikeba\Desktop\python_project\pictures\game_manipulation\Berzerk.jpeg")
-
-intro_game_picture=pygame.image.load(r"C:\Users\ikeba\Desktop\python_project\pictures\game_manipulation\into_pic.jpeg")
-image_2v2=pygame.image.load(r"C:\Users\ikeba\Desktop\python_project\pictures\game_manipulation\icone_2vs2.png")
-image_3v3=pygame.image.load(r"C:\Users\ikeba\Desktop\python_project\pictures\game_manipulation\icone_3vs3.png")
-
-"""
 win = pygame.display.set_mode((screan_width, screan_height))
 
 player1_pos = [[150, 90], [300, 90], [450, 90], [600, 90]]
