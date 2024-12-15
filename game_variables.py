@@ -26,8 +26,9 @@ potion_power =  pygame.image.load(os.path.join("pictures\maps_picture", 'potion_
 
 win = pygame.display.set_mode((screan_width, screan_height))
 
-player1_pos = [[300,120],[420,120],[720,120],[1020,120]]
-player2_pos = [[300,600],[420,600],[720,600],[1020,600]]
+player1_pos = [[150, 90], [300, 90], [450, 90], [600, 90]]
+player2_pos = [[150, 570], [300, 570], [450, 570], [600, 570]]
+
 
 
 
@@ -101,11 +102,10 @@ number_of_player = {  # Here I stock information to choose on the menu to play 2
 }
 
 
-
 unit_selection_player1 = {
     "choice1": {
         "name": "unit_Clasian",
-        "range_helath": "Balanced unit with medium range, 25 dmg/turn, 100 HP",
+        "range_helath": "Clasian: Balanced unit with medium range, 25 dmg/turn, 100 HP",
         "Special": "Heals all allies (25% HP). Basic attack included",
         "pos_x": 100,  
         "pos_y": 100,  
@@ -117,7 +117,7 @@ unit_selection_player1 = {
     },
     "choice2": {
         "name": "unit_Spectre",
-        "range_helath": "Agile unit with long axis movement, 40 dmg/turn, 75 HP",
+        "range_helath": "Spectre: Agile unit with long axis movement, 40 dmg/turn, 75 HP",
         "Special": "Reveal (uncovers hidden areas for one turn). Basic attack included",
         "pos_x": 100,  
         "pos_y": 250,  
@@ -129,7 +129,7 @@ unit_selection_player1 = {
     },
     "choice3": {
         "name": "unit_Rapidzio",
-        "range_helath": "Long-range unit, 15 dmg/turn, 75 HP",
+        "range_helath": "Rapidzio: Long-range unit, 15 dmg/turn, 75 HP",
         "Special": "Long shot (high damage, unlimited range). Basic attack included",
         "pos_x": 100, 
         "pos_y": 400, 
@@ -141,7 +141,7 @@ unit_selection_player1 = {
     },
     "choice4": {
         "name": "unit_Berzerk",
-        "range_helath": "High-damage unit, 40 dmg/turn, 150 HP",
+        "range_helath": "Berzerk: High-damage unit, 40 dmg/turn, 150 HP",
         "Special": "Mass attack (4x4 area, 20 dmg). Basic attack included",
         "pos_x": 100,  
         "pos_y": 550,  
@@ -162,7 +162,7 @@ unit_selection_player1 = {
 unit_selection_player2 = {
     "choice1": {
         "name": "unit_Clasian",
-        "range_helath": "Balanced unit with medium range, 25 dmg/turn, 100 HP",
+        "range_helath": "Clasian: Balanced unit with medium range, 25 dmg/turn, 100 HP",
         "Special": "Heals all allies (25% HP). Basic attack included",
         "pos_x": 100, 
         "pos_y": 550,  
@@ -174,7 +174,7 @@ unit_selection_player2 = {
     },
     "choice2": {
         "name": "unit_Spectre",
-        "range_helath": "Agile unit with long axis movement, 40 dmg/turn, 75 HP",
+        "range_helath": "Spectre: Agile unit with long axis movement, 40 dmg/turn, 75 HP",
         "Special": "Reveal (uncovers hidden areas for one turn). Basic attack included",
         "pos_x": 100, 
         "pos_y": 400,  
@@ -186,7 +186,7 @@ unit_selection_player2 = {
     },
     "choice3": {
         "name": "unit_Rapidzio",
-        "range_helath": "Long-range unit, 15 dmg/turn, 75 HP",
+        "range_helath": "Rapidzio: Long-range unit, 15 dmg/turn, 75 HP",
         "Special": "Long shot (high damage, unlimited range). Basic attack included",
         "pos_x": 100, 
         "pos_y": 250,  
@@ -198,7 +198,7 @@ unit_selection_player2 = {
     },
     "choice4": {
         "name": "unit_Berzerk",
-        "range_helath": "High-damage unit, 40 dmg/turn, 150 HP",
+        "range_helath": "Berzerk: High-damage unit, 40 dmg/turn, 150 HP",
         "Special": "Mass attack (4x4 area, 20 dmg). Basic attack included",
         "pos_x": 100, 
         "pos_y": 100,  
@@ -222,12 +222,13 @@ unit_selection_player2 = {
 
 
 
+
 # information for each unit 
 
 UNITS_INFORMATION = {
     "unit_Clasian": {
         "name" : "Clasian" ,
-        "picture" : menu_picture_Clasian , 
+        "picture" : walk_down_Clasian[0] , 
         "matrice": matrice_Clasian,
         "walk_right": walk_right_Clasian,
         "walk_left": walk_left_Clasian,
@@ -239,7 +240,7 @@ UNITS_INFORMATION = {
     },
     "unit_Spectre": {
         "name" : "Spectre" ,
-        "picture" : menu_picture_Spectre , 
+        "picture" : walk_down_Rapidzio[0] , 
         "matrice": matrice_Spectre,
         "walk_right": walk_right_Spectre,
         "walk_left": walk_left_Spectre,
@@ -251,7 +252,7 @@ UNITS_INFORMATION = {
     },
     "unit_Rapidzio": {
         "name" : "Rapidzio" ,
-        "picture" : menu_picture_Rapidzio , 
+        "picture" : walk_down_Rapidzio[0], 
         "matrice": matrice_Rapidzio,
         "walk_right": walk_right_Rapidzio,
         "walk_left": walk_left_Rapidzio,
@@ -264,7 +265,7 @@ UNITS_INFORMATION = {
     },
     "unit_Berzerk": {
         "name" : "Berzerk" ,
-        "picture" : menu_picture_Berzerk , 
+        "picture" : walk_down_Berzerk[0] , 
         "matrice": matrice_Berzerk,
         "walk_right": walk_right_Berzerk,
         "walk_left": walk_left_Berzerk,
