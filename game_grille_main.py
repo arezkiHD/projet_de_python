@@ -15,14 +15,9 @@ pygame.init()
 
 pygame.display.set_caption("My Game")
 map_matrix = MapLoader("facile").load_map()
-#map_matrix=new_map
+game_music = pygame.mixer.music.load("Arcade fast flow1.ogg")
 
-# Player settings
-
-
-#game_music = pygame.mixer.music.load("Arcade fast flow1.ogg")
-
-#pygame.mixer.music.play()
+pygame.mixer.music.play(-1)
                             
                 
 # Initialize wall and player objects

@@ -6,7 +6,7 @@ from AFFICHE_GAME_RESAULT import *
 
 
 class unit:
-    def __init__(self,pos,pos_start, win,max_health, base_dammage , wall,matrice_zone , walk_right, walk_left, walk_up , walk_down, name  ):
+    def __init__(self,pos,pos_start, win,max_health, base_dammage , wall,matrice_zone , walk_right, walk_left, walk_up , walk_down, name , matrice_attack = matrice_attack  ):
         self.x = pos[0]
         self.y = pos[1]
         self.pos_start = pos_start
@@ -14,6 +14,7 @@ class unit:
         self.max_health = max_health
         self.health_level = max_health
         self.wall_rect = wall  
+        self.matrice_attack = matrice_attack 
          
         self.name = name 
         self.win = win
@@ -49,6 +50,7 @@ class unit:
 
 
         self.active_zone = []
+        self.zone_basic_attack = []
 
     def calculate_zone(self, origin_x, origin_y):
         """Calculate the movable zone based on a fixed origin."""
@@ -61,6 +63,10 @@ class unit:
                         rect = pygame.Rect(x, y, tile_size, tile_size)
                         if not any(rect.colliderect(wall) for wall in self.wall_rect.wall_positions["wall"] ) :                        
                             zone_data.append(rect)
+                    if self.matrice_attack[i] == 1:
+                        self.zone_basic_attack.append(rect)
+
+                    
 
                     i += 1
 
@@ -187,7 +193,7 @@ class unit:
                 self.x, self.y = new_x, new_y
   
     def basic_attack(self, player_me, enemy_units):
-        # Only attack if it's the player's turn
+        
         if not player_me.play_or_not:
             return
     
@@ -197,7 +203,7 @@ class unit:
             en_unit.rect.topleft = (en_unit.x, en_unit.y)
     
             # Check if enemy unit is within any of the active zone tiles
-            if any(en_unit.rect.colliderect(zone) for zone in self.active_zone):
+            if any(en_unit.rect.colliderect(zone) for zone in self.zone_basic_attack):
                 # Enemy is in range: Attack!
                 en_unit.health_level -= 20
                 en_unit.get_attacked = True  # Make the enemy unit visible
