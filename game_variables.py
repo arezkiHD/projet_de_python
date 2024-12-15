@@ -13,7 +13,7 @@ map_matrix = random.choice(facile_maps)
 
 
 
-"""#image_player =  pygame.image.load(os.path.join("pictures\humain_male", 'up (2).png')) 
+#image_player =  pygame.image.load(os.path.join("pictures\humain_male", 'up (2).png')) 
 grass_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'grass.png')) 
 water_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'water.png')) 
 wall_image =  pygame.image.load(os.path.join("pictures\maps_picture", 'wall.png')) 
@@ -57,8 +57,8 @@ menu_picture_Berzerk = pygame.image.load("pictures\game_manipulation\Berzerk.jpe
 intro_game_picture=pygame.image.load("pictures\game_manipulation\into_pic.jpeg")
 image_2v2=pygame.image.load("pictures\game_manipulation\icone_2vs2.png")
 image_3v3=pygame.image.load("pictures\game_manipulation\icone_3vs3.png")
-"""
 
+"""
 #image_player =  pygame.image.load(os.path.join("pictures\humain_male", 'up (2).png')) 
 grass_image =  pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\maps_picture", 'grass_x_30.jpg')) 
 water_image =  pygame.image.load(os.path.join(r"C:\Users\ikeba\Desktop\python_project\pictures\maps_picture", 'water_30.jpg')) 
@@ -98,7 +98,7 @@ intro_game_picture=pygame.image.load(r"C:\Users\ikeba\Desktop\python_project\pic
 image_2v2=pygame.image.load(r"C:\Users\ikeba\Desktop\python_project\pictures\game_manipulation\icone_2vs2.png")
 image_3v3=pygame.image.load(r"C:\Users\ikeba\Desktop\python_project\pictures\game_manipulation\icone_3vs3.png")
 
-
+"""
 win = pygame.display.set_mode((screan_width, screan_height))
 
 player1_pos = [[150, 90], [300, 90], [450, 90], [600, 90]]

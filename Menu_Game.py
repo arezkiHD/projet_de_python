@@ -21,7 +21,7 @@ class introduction_game():
     
     def affiche_introduction_click_start_start(self,press_mouse) :
         if self.i==0 : 
-            pygame.mixer.music.load(r"C:\Users\ikeba\Desktop\python_project\music\game_music.wav")
+            pygame.mixer.music.load("music\game_music.wav")
             pygame.mixer.music.play() 
             self.win.blit(self.introduction_pictures, (0,0, screan_width  , screan_height ))
             if press_mouse[2]:                   
@@ -52,7 +52,7 @@ class introduction_game():
                     self.affiche_text(f" {choice_data['name']} ", hover_x+choice_data["width_before"]//2,hover_y+choice_data["height_after"] , 60)
                                                                           
                     if press_mouse[2]:  
-                        pygame.mixer.music.load(r"C:\Users\ikeba\Desktop\python_project\Menu Selection Click.wav")
+                        pygame.mixer.music.load("Menu Selection Click.wav")
                         pygame.mixer.music.play()                                              
 
                         if not self.mouse_down:
@@ -116,7 +116,7 @@ class introduction_game():
 
                     # Check for a click to select the option
                     if press_mouse[2]:
-                        pygame.mixer.music.load(r"C:\Users\ikeba\Desktop\python_project\Menu Selection Click.wav")
+                        pygame.mixer.music.load("Menu Selection Click.wav")
                         pygame.mixer.music.play()                                                
                          
                         if not self.mouse_down:
@@ -182,7 +182,7 @@ class introduction_game():
                     self.affiche_text(f" {choice_data['Special']} ",  choice_data["pos_x"]+350, choice_data["pos_y"]+60, 30)
 
                     if press_mouse[2]:   
-                        pygame.mixer.music.load(r"C:\Users\ikeba\Desktop\python_project\Menu Selection Click.wav")
+                        pygame.mixer.music.load("Menu Selection Click.wav")
                         pygame.mixer.music.play()                       
                          
                         if not self.mouse_down:
