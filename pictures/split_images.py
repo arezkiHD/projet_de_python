@@ -1,5 +1,7 @@
 import pygame
 import os
+from PIL import Image
+
 
 # Initialize Pygame
 pygame.init()
@@ -8,16 +10,19 @@ pygame.init()
 pygame.display.set_mode((1, 1))
 
 # Load the sprite sheet
-sprite_sheet = pygame.image.load(r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\image manipulation\\helth_bar.jpg").convert_alpha()
+sprite_sheet = pygame.image.load(r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\monster.png").convert_alpha()
 
 # Frame properties
-frame_width = 1000/4  # Width of each frame
-frame_height =390/5  # Height of each frame
-num_columns = 4  # Number of frames in a row
-num_rows = 5  # Number of rows in the sprite sheet
+num_columns = 7 # Number of frames in a row
+num_rows = 5 # Number of rows in the sprite sheet
+
+frame_width = 896/num_columns # Width of each frame
+frame_height =896 / num_rows  # Height of each frame
+
+
 
 # Output folder for frames
-output_folder = r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\health_bar"
+output_folder = r"C:\Users\arezk\Desktop\course\M1\Ipython\Projet_de_python\monster_4_direction"
 os.makedirs(output_folder, exist_ok=True)  # Create the folder if it doesn't exist
 
 # Extract and save frames
@@ -30,6 +35,8 @@ for row in range(num_rows):
 
         # Extract the frame
         frame = sprite_sheet.subsurface((x, y, frame_width, frame_height))
+        # to get the shape with 30x30
+        frame = pygame.transform.smoothscale(frame, (30, 30))
 
         # Save the frame as a separate image
         frame_path = os.path.join(output_folder, f"frame_{frame_count}.png")
