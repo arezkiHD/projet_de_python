@@ -3,7 +3,7 @@ from wall_adding_imad_code import *
 from AFFICHE_GAME_RESAULT import * 
 from Menu_Game import *
 from EVENT import*
-from Player import*
+from PLAYER import*
 from game_variables import *
 
 pygame.init()
